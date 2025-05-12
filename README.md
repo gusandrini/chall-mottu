@@ -41,3 +41,39 @@ Tudo isso garante mais **agilidade, rastreabilidade e organização** nos pátio
 ### 📦 Clone o repositório
 ```bash
 git clone https://github.com/gusandrini/chall-mottu.git
+```
+
+### 📁 Acesse a pasta do projeto
+```bash
+cd chall-mottu
+```
+
+### 📱 App Mobile (Expo)
+```bash
+cd mobile
+npm install
+npm start
+```
+
+---
+
+## ⚙️ Pré-requisitos
+
+- Node.js
+- Java 17+
+- Maven
+- MySQL
+- Expo CLI
+
+---
+
+## 📝 Observações
+
+- Certifique-se de que o banco de dados está configurado corretamente.
+- Toda movimentação de motos é registrada automaticamente com data, hora e localização.
+
+---
+
+## 📎 Repositório
+
+[https://github.com/gusandrini/chall-mottu](https://github.com/gusandrini/chall-mottu)
