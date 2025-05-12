@@ -9,8 +9,8 @@
 | Nome Completo        | RM       |
 |----------------------|----------|
 | Gustavo Sandrini     | 557505   |
-| Eduarda Tiemi        | RMXXXXX  |
-| Felipe Pizzinato     | RMXXXXXX |
+| Eduarda Tiemi        | 554756   |
+| Felipe Pizzinato     | 555141   |
 
 ---
 
@@ -32,7 +32,7 @@ Tudo isso garante mais **agilidade, rastreabilidade e organização** nos pátio
 - ⚛️ React Native (Expo)
 - 🧠 Vision AI / OCR
 - ☕ Spring Boot (Java)
-- 🐬 MySQL
+- 🐬 Oracle DB
 
 ---
 
