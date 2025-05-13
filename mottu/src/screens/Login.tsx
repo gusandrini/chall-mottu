@@ -11,7 +11,7 @@ export default function Login({ navigation }: any) {
         if (email === 'teste@example.com' && password === '000000') {
             // Salvar os dados do login no AsyncStorage
             await AsyncStorage.setItem('user', JSON.stringify({ email }));
-            navigation.navigate('Cliente');
+            navigation.navigate('Home');
         } else {
             alert('Credenciais inválidas');
         }

@@ -1,4 +1,5 @@
 // src/screens/Moto.tsx
+import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -15,7 +16,7 @@ type Moto = {
 
 export default function Moto() {
     const [motos, setMotos] = useState<Moto[]>([]);
-    const [modelo, setModelo] = useState('Modelo 1');
+    const [modelo, setModelo] = useState('Mottu Pop');
     const [filial, setFilial] = useState('');
     const [departamento, setDepartamento] = useState('');
     const [placa, setPlaca] = useState('');
@@ -33,7 +34,7 @@ export default function Moto() {
     }, []);
 
     const handleAddMoto = async () => {
-        const newMoto = {
+        const newMoto: Moto = {
             id: Date.now().toString(),
             modelo,
             filial,
@@ -45,7 +46,7 @@ export default function Moto() {
         const updatedMotos = [...motos, newMoto];
         setMotos(updatedMotos);
         await AsyncStorage.setItem('motos', JSON.stringify(updatedMotos));
-        setModelo('Modelo 1');
+        setModelo('Mottu Pop');
         setFilial('');
         setDepartamento('');
         setPlaca('');
@@ -55,11 +56,16 @@ export default function Moto() {
 
     return (
         <View style={styles.container}>
-            <TextInput
+            <Text style={styles.label}>Modelo</Text>
+            <Picker
+                selectedValue={modelo}
+                onValueChange={(itemValue) => setModelo(itemValue)}
                 style={styles.input}
-                value={modelo}
-                onChangeText={setModelo}
-            />
+            >
+                <Picker.Item label="Mottu Pop" value="Mottu Pop" />
+                <Picker.Item label="Mottu Sport" value="Mottu Sport" />
+            </Picker>
+
             <TextInput
                 style={styles.input}
                 placeholder="Filial"
@@ -92,6 +98,7 @@ export default function Moto() {
                 onChangeText={(text) => setKmRodado(Number(text))}
             />
             <Button title="Adicionar Moto" onPress={handleAddMoto} />
+            
             <FlatList
                 data={motos}
                 keyExtractor={(item) => item.id}
@@ -113,12 +120,17 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
+    label: {
+        fontWeight: 'bold',
+        marginBottom: 4,
+    },
     input: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 12,
         paddingLeft: 8,
+        justifyContent: 'center',
     },
     item: {
         padding: 12,

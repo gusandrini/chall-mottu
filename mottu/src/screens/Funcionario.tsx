@@ -20,9 +20,11 @@ export default function Funcionario() {
         <View style={styles.container}>
             {user ? (
                 <>
-                    <Text style={styles.text}>Nome: {user.email}</Text>
-                    <Text style={styles.text}>Cargo: Técnico</Text>  {/* Dados fixos */}
-                    <Text style={styles.text}>Filial: Filial 1</Text>  {/* Dados fixos */}
+                    <Text style={styles.text}>Email: {user.email}</Text>
+                    <Text style={styles.text}>Nome: Jonas</Text>
+                    <Text style={styles.text}>CPF: 123.456.789-10</Text>
+                    <Text style={styles.text}>Cargo: Técnico</Text>  
+                    <Text style={styles.text}>Filial: Filial 1</Text> 
                 </>
             ) : (
                 <Text style={styles.text}>Carregando dados...</Text>

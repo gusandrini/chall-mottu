@@ -11,9 +11,11 @@ export default function SobreNos() {
                 diversos tipos de serviços. Nosso objetivo é oferecer qualidade, segurança
                 e praticidade aos nossos clientes.
             </Text>
-            <Text style={styles.text}>Endereço: Rua Exemplo, 123</Text>
-            <Text style={styles.text}>Telefone: (11) 12345-6789</Text>
-            <Text style={styles.text}>Email: contato@empresa.com.br</Text>
+            <Text style={styles.text}>Telefone: +55 11 3181-8188</Text>
+            <Text style={styles.text}>Email: mottu@empresa.com.br</Text>
+            <Text style={styles.text}>Funcionamento das bases:</Text>
+            <Text style={styles.text}>Seg. a Sex. das 08:00 às 18:00</Text>
+            <Text style={styles.text}>Sáb. das 09:00 às 12:00</Text>
         </View>
     );
 }
