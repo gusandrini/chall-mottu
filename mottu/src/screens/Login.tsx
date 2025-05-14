@@ -8,7 +8,7 @@ export default function Login({ navigation }: any) {
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
-        if (email === 'trm' && password === '000000') {
+        if (email === 'teste@teste.com' && password === '000000') {
             // Salvar os dados do login no AsyncStorage
             await AsyncStorage.setItem('user', JSON.stringify({ email }));
             navigation.navigate('Home');
