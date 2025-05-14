@@ -8,7 +8,6 @@ const Home = () => {
   const buttons = [
     { title: 'Cliente', screen: 'Cliente' },
     { title: 'Funcionário', screen: 'Funcionario' },
-    { title: 'Login', screen: 'Login' },
     { title: 'Manutenção', screen: 'Manutencao' },
     { title: 'Moto', screen: 'Moto' },
     { title: 'Sobre Nós', screen: 'SobreNos' },
