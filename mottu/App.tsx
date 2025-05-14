@@ -5,8 +5,6 @@ import { ImageBackground, SafeAreaView, StyleSheet } from 'react-native';
 
 import backgroundImage from './src/images/fundo.png';
 import Login from './src/screens/Login';
-import Header from './src/components/Header';
-import Footer from './src/components/Footer';
 import Home from './src/components/Home';
 import Cliente from './src/screens/Cliente'; // Supondo que você tenha essas telas
 import Funcionario from './src/screens/Funcionario'; 
@@ -21,7 +19,6 @@ export default function App() {
     <NavigationContainer>
       <ImageBackground source={backgroundImage} style={styles.background}>
         <SafeAreaView style={styles.container}>
-          <Header />
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Home" component={Home} />
@@ -31,7 +28,6 @@ export default function App() {
             <Stack.Screen name="Moto" component={Moto} />
             <Stack.Screen name="SobreNos" component={SobreNos} />
           </Stack.Navigator>
-          <Footer />
         </SafeAreaView>
       </ImageBackground>
     </NavigationContainer>

@@ -1,7 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 type Cliente = {
   id: string;
@@ -45,10 +60,7 @@ export default function Cliente() {
     setClientes(updatedClientes);
     await AsyncStorage.setItem('clientes', JSON.stringify(updatedClientes));
 
-    setNome('');
-    setEmail('');
-    setCpf('');
-    setLogradouro('');
+    handleClearFields();
   };
 
   const handleClearFields = () => {
@@ -64,75 +76,84 @@ export default function Cliente() {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nome"
-        placeholderTextColor="#ccc"
-        value={nome}
-        onChangeText={setNome}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#ccc"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="CPF (somente números)"
-        placeholderTextColor="#ccc"
-        value={cpf}
-        onChangeText={text => setCpf(text.replace(/[^0-9]/g, ''))}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Logradouro"
-        placeholderTextColor="#ccc"
-        value={logradouro}
-        onChangeText={setLogradouro}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+        <Header />
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <TextInput
+            style={styles.input}
+            placeholder="Nome"
+            placeholderTextColor="#ccc"
+            value={nome}
+            onChangeText={setNome}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor="#ccc"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="CPF (somente números)"
+            placeholderTextColor="#ccc"
+            value={cpf}
+            onChangeText={text => setCpf(text.replace(/[^0-9]/g, ''))}
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Logradouro"
+            placeholderTextColor="#ccc"
+            value={logradouro}
+            onChangeText={setLogradouro}
+          />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddClient}>
-        <Text style={styles.buttonText}>Adicionar Cliente</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleAddClient}>
+            <Text style={styles.buttonText}>Adicionar Cliente</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity style={styles.clearButton} onPress={handleClearFields}>
-        <Text style={styles.buttonText}>Limpar Campos</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.clearButton} onPress={handleClearFields}>
+            <Text style={styles.buttonText}>Limpar Campos</Text>
+          </TouchableOpacity>
 
-      <FlatList
-        data={clientes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemText}>Nome: {item.nome}</Text>
-            <Text style={styles.itemText}>Email: {item.email}</Text>
-            <Text style={styles.itemText}>CPF: {item.cpf}</Text>
-            <Text style={styles.itemText}>Logradouro: {item.logradouro}</Text>
-          </View>
-        )}
-      />
+          <FlatList
+            data={clientes}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <Text style={styles.itemText}>Nome: {item.nome}</Text>
+                <Text style={styles.itemText}>Email: {item.email}</Text>
+                <Text style={styles.itemText}>CPF: {item.cpf}</Text>
+                <Text style={styles.itemText}>Logradouro: {item.logradouro}</Text>
+              </View>
+            )}
+            contentContainerStyle={{ paddingBottom: 30 }}
+          />
 
-      {clientes.length > 0 && (
-        <TouchableOpacity style={styles.clearListButton} onPress={handleClearClients}>
-          <Text style={styles.buttonText}>Limpar Clientes Cadastrados</Text>
-        </TouchableOpacity>
-      )}
+          {clientes.length > 0 && (
+            <TouchableOpacity style={styles.clearListButton} onPress={handleClearClients}>
+              <Text style={styles.buttonText}>Limpar Clientes Cadastrados</Text>
+            </TouchableOpacity>
+          )}
 
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.buttonText}>Voltar à Home</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+            <Text style={styles.buttonText}>Voltar à Home</Text>
+          </TouchableOpacity>
+        </ScrollView>
+        <Footer />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  container: {
     padding: 24,
   },
   input: {
