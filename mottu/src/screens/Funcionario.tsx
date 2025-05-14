@@ -35,11 +35,21 @@ export default function Funcionario() {
     loadUserData();
   }, []);
 
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('user');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' as never }],
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header />
 
       <ScrollView contentContainerStyle={styles.container}>
+        
+
         <Text style={styles.title}>Dados do Funcionário</Text>
 
         {loading ? (
@@ -60,6 +70,16 @@ export default function Funcionario() {
           <Icon name="arrow-left" size={18} color="#00FF88" style={{ marginRight: 8 }} />
           <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
+
+        {user && (
+          <View style={styles.logoutContainer}>
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+              <Icon name="log-out" size={16} color="#fff" style={{ marginRight: 6 }} />
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
       </ScrollView>
 
       <Footer style={{ marginTop: 20 }} />
@@ -67,7 +87,6 @@ export default function Funcionario() {
   );
 }
 
-// Componente de item com ícone
 function Item({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
     <View style={styles.itemRow}>
@@ -88,6 +107,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 40,
+  },
+  logoutContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 4,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ff3b30',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginTop: 40,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   title: {
     fontSize: 22,

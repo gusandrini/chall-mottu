@@ -5,7 +5,7 @@ const Header = () => {
     return (
         <View style={styles.header}>
             <Image
-                source={require('../images/mottu.png')}  // Caminho corrigido
+                source={require('../images/mottu.png')} 
                 style={styles.logo}
             />
         </View>
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo: {
-        width: 150, // Ajuste conforme necessário
-        height: 50,  // Ajuste conforme necessário
-        resizeMode: 'contain',  // Isso evita que a imagem seja distorcida
+        width: 150, 
+        height: 50,  
+        resizeMode: 'contain',  
     },
 });
 
