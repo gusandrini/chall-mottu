@@ -48,18 +48,6 @@ git clone https://github.com/gusandrini/chall-mottu.git
 cd mottu
 ```
 
-### ⚙️ Backend (Spring Boot)
-Certifique-se de que o banco de dados está ativo e corretamente configurado no `application.properties`.
-
-Para rodar a aplicação backend:
-```bash
-cd mottu
-./mvnw spring-boot:run
-```
-
-> 💡 **Importante:** O projeto usa Java 17+ e Maven.
-
----
 
 ### 📱 App Mobile (React Native com Expo)
 ```bash
