@@ -1,66 +1,102 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons, FontAwesome5, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const Home = () => {
   const navigation = useNavigation();
 
   const buttons = [
-    { title: 'Cliente', screen: 'Cliente' },
-    { title: 'Funcionário', screen: 'Funcionario' },
-    { title: 'Manutenção', screen: 'Manutencao' },
-    { title: 'Moto', screen: 'Moto' },
-    { title: 'Sobre Nós', screen: 'SobreNos' },
+    { title: 'Cliente', screen: 'Cliente', icon: <Ionicons name="person-outline" size={22} color="#00FF88" /> },
+    { title: 'Funcionário', screen: 'Funcionario', icon: <FontAwesome5 name="user-tie" size={22} color="#00FF88" /> },
+    { title: 'Manutenção', screen: 'Manutencao', icon: <MaterialCommunityIcons name="tools" size={22} color="#00FF88" /> },
+    { title: 'Moto', screen: 'Moto', icon: <MaterialCommunityIcons name="motorbike" size={22} color="#00FF88" /> },
+    { title: 'Sobre Nós', screen: 'SobreNos', icon: <Feather name="info" size={22} color="#00FF88" /> },
   ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Controle Inteligente, Mottu em Movimento</Text>
-      <View style={styles.buttonContainer}>
-        {buttons.map((btn, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.button}
-            onPress={() => navigation.navigate(btn.screen)}
-          >
-            <Text style={styles.buttonText}>{btn.title}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+    <View style={styles.screen}>
+      <Header />
+      
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Controle Inteligente{'\n'}<Text style={styles.highlight}>Mottu em Movimento</Text></Text>
+        
+        <View style={styles.buttonContainer}>
+          {buttons.map((btn, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.button}
+              onPress={() => navigation.navigate(btn.screen)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.iconLabel}>
+                {btn.icon}
+                <Text style={styles.buttonText}>{btn.title}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+      
+      <Footer />
     </View>
   );
 };
 
 export default Home;
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
+    backgroundColor: '#000',
+  },
+  container: {
     padding: 24,
-    justifyContent: 'center',
-    backgroundColor: '#000', // Fundo preto
+    paddingBottom: 100,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    color: '#fff',
+    marginBottom: 32,
     textAlign: 'center',
-    color: '#00FF88', // Verde vibrante
+  },
+  highlight: {
+    color: '#00FF88',
   },
   buttonContainer: {
-    gap: 12,
+    width: '100%',
+    gap: 16,
   },
   button: {
-    backgroundColor: '#1c1c1e', // Cinza escuro
-    paddingVertical: 14,
-    borderRadius: 12,
+    backgroundColor: '#1c1c1e',
+    paddingVertical: 16,
+    borderRadius: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#00FF88', // Verde nos detalhes
+    borderColor: '#00FF88',
+    shadowColor: '#00FF88',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 4,
+    width: width * 0.9,
+    alignSelf: 'center',
+  },
+  iconLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
   },
 });
