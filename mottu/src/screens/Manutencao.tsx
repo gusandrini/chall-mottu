@@ -1,7 +1,6 @@
-// src/screens/Manutencao.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from 'react-native-vector-icons'; // Importando ícones
 
 import Header from '../components/Header';
@@ -32,7 +31,30 @@ export default function Manutencao({ navigation }: any) {
         loadData();
     }, []);
 
+    const isValidId = (id: string) => {
+        const regex = /^[0-9]+$/; // Verifica se o ID contém apenas números
+        return regex.test(id);
+    };
+
+    const isValidDate = (date: string) => {
+        const parsedDate = Date.parse(date);
+        return !isNaN(parsedDate); // Verifica se a data é válida
+    };
+
     const handleAddManutencao = async () => {
+        if (!isValidId(motoId)) {
+            Alert.alert("Erro", "ID da moto deve ser um número válido.");
+            return;
+        }
+        if (!isValidDate(dataEntrada)) {
+            Alert.alert("Erro", "Data de entrada deve ser uma data válida.");
+            return;
+        }
+        if (dataSaida && !isValidDate(dataSaida)) {
+            Alert.alert("Erro", "Data de saída deve ser uma data válida.");
+            return;
+        }
+
         const newManutencao = {
             id: Date.now().toString(),
             motoId,
@@ -57,10 +79,25 @@ export default function Manutencao({ navigation }: any) {
 
     const renderItem = ({ item }: { item: Manutencao }) => (
         <View style={styles.item}>
-            <Text style={styles.itemText}>ID da Moto: <Text style={styles.itemValue}>{item.motoId}</Text></Text>
-            <Text style={styles.itemText}>Status: <Text style={styles.itemValue}>{item.status}</Text></Text>
-            <Text style={styles.itemText}>Data de Entrada: <Text style={styles.itemValue}>{item.dataEntrada}</Text></Text>
-            <Text style={styles.itemText}>Data de Saída: <Text style={styles.itemValue}>{item.dataSaida || 'N/A'}</Text></Text>
+            <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>ID da Moto:</Text>
+                <Text style={styles.itemValue}>{item.motoId}</Text>
+            </View>
+
+            <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>Status:</Text>
+                <Text style={styles.itemValue}>{item.status}</Text>
+            </View>
+
+            <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>Data de Entrada:</Text>
+                <Text style={styles.itemValue}>{item.dataEntrada}</Text>
+            </View>
+
+            <View style={styles.itemDetails}>
+                <Text style={styles.itemText}>Data de Saída:</Text>
+                <Text style={styles.itemValue}>{item.dataSaida || 'N/A'}</Text>
+            </View>
 
             <TouchableOpacity
                 style={styles.deleteButton}
@@ -83,6 +120,7 @@ export default function Manutencao({ navigation }: any) {
                     value={motoId}
                     onChangeText={setMotoId}
                     placeholderTextColor="#888"
+                    keyboardType="numeric"
                 />
                 <TextInput
                     style={styles.input}
@@ -117,6 +155,7 @@ export default function Manutencao({ navigation }: any) {
                 />
 
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name="arrow-back-outline" size={20} color="#fff" />
                     <Text style={styles.buttonText}>Voltar ao Home</Text>
                 </TouchableOpacity>
             </View>
@@ -168,29 +207,36 @@ const styles = StyleSheet.create({
         padding: 12,
         borderBottomWidth: 1,
         borderBottomColor: '#888',
+        marginBottom: 12,
+        backgroundColor: '#222',
+        borderRadius: 8,
+        position: 'relative', // Permite posicionar o botão de delete de forma centralizada
+    },
+    itemDetails: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        marginBottom: 8,
     },
     itemText: {
         color: '#fff',
         fontSize: 14,
+        fontWeight: '500',
     },
     itemValue: {
         fontWeight: 'bold',
         color: '#00FF88',
     },
     deleteButton: {
-        padding: 8,
-        backgroundColor: 'transparent',
+        alignItems: 'center'
     },
     backButton: {
-        backgroundColor: '#1c1c1e',
-        borderRadius: 12,
-        paddingVertical: 14,
-        alignItems: 'center',
-        marginTop: 20,
-        borderWidth: 1,
-        borderColor: '#00FF88',
-    },
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1c1c1e',
+    borderRadius: 12,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: '#00FF88',
+  },
 });

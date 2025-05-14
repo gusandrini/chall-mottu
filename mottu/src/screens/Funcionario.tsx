@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Feather';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -45,23 +46,36 @@ export default function Funcionario() {
           <ActivityIndicator size="large" color="#00FF88" style={{ marginTop: 20 }} />
         ) : user ? (
           <View style={styles.item}>
-            <Text style={styles.itemText}>Email: {user.email}</Text>
-            <Text style={styles.itemText}>Nome: Jonas</Text>
-            <Text style={styles.itemText}>CPF: 123.456.789-10</Text>
-            <Text style={styles.itemText}>Cargo: Técnico</Text>
-            <Text style={styles.itemText}>Filial: Filial 1</Text>
+            <Item icon="mail" label="Email" value={user.email} />
+            <Item icon="user" label="Nome" value="Jonas" />
+            <Item icon="credit-card" label="CPF" value="123.456.789-10" />
+            <Item icon="briefcase" label="Cargo" value="Técnico" />
+            <Item icon="map-pin" label="Filial" value="Filial 1" />
           </View>
         ) : (
           <Text style={styles.empty}>Nenhum dado encontrado.</Text>
         )}
 
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={18} color="#00FF88" style={{ marginRight: 8 }} />
           <Text style={styles.buttonText}>Voltar</Text>
         </TouchableOpacity>
       </ScrollView>
 
       <Footer style={{ marginTop: 20 }} />
     </SafeAreaView>
+  );
+}
+
+// Componente de item com ícone
+function Item({ icon, label, value }: { icon: string; label: string; value: string }) {
+  return (
+    <View style={styles.itemRow}>
+      <Icon name={icon} size={18} color="#00FF88" style={styles.itemIcon} />
+      <Text style={styles.itemText}>
+        <Text style={styles.itemLabel}>{label}:</Text> {value}
+      </Text>
+    </View>
   );
 }
 
@@ -73,32 +87,47 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 40, // Espaço pro Footer
+    paddingBottom: 40,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     color: '#00FF88',
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
   },
   item: {
     backgroundColor: '#111',
-    borderRadius: 10,
-    padding: 16,
+    borderRadius: 12,
+    padding: 20,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#00FF88',
   },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  itemIcon: {
+    marginRight: 12,
+  },
   itemText: {
     color: '#fff',
     fontSize: 15,
-    marginBottom: 4,
+    flexShrink: 1,
+  },
+  itemLabel: {
+    fontWeight: '600',
+    color: '#00FF88',
   },
   backButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#1c1c1e',
     borderRadius: 12,
     paddingVertical: 14,
-    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#00FF88',
   },
