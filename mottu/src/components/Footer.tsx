@@ -1,29 +1,28 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
-const Footer = () => {
-    return (
-        <View style={styles.footer}>
-            <Text style={styles.text}>© 2025 Sua Empresa - Todos os direitos reservados</Text>
-        </View>
-    );
+type Props = {
+  style?: ViewStyle;
 };
 
-const styles = StyleSheet.create({
-    footer: {
-        width: '100%',
-        height: 60, // Tamanho do footer
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#333', // Cor de fundo do footer
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-    },
-    text: {
-        color: '#fff', // Cor do texto
-        fontSize: 14,
-    },
-});
+export default function Footer({ style }: Props) {
+  return (
+    <View style={[styles.footer, style]}>
+      <Text style={styles.text}>© 2025 Sua Empresa</Text>
+    </View>
+  );
+}
 
-export default Footer;
+const styles = StyleSheet.create({
+  footer: {
+    backgroundColor: '#1c1c1e',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#00FF88',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 12,
+  },
+});

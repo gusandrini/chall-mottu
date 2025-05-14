@@ -14,6 +14,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from 'react-native-vector-icons';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -70,16 +71,21 @@ export default function Cliente() {
     setLogradouro('');
   };
 
-  const handleClearClients = async () => {
-    setClientes([]);
-    await AsyncStorage.removeItem('clientes');
+  const handleDeleteClient = async (id: string) => {
+    const updatedClientes = clientes.filter(client => client.id !== id);
+    setClientes(updatedClientes);
+    await AsyncStorage.setItem('clientes', JSON.stringify(updatedClientes));
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.flexContainer}
+      >
         <Header />
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        
+        <ScrollView style={styles.formContainer} keyboardShouldPersistTaps="handled">
           <TextInput
             style={styles.input}
             placeholder="Nome"
@@ -118,30 +124,37 @@ export default function Cliente() {
             <Text style={styles.buttonText}>Limpar Campos</Text>
           </TouchableOpacity>
 
+          {/* Quebra de linha visível */}
+          <View style={{ height: 20 }} />
+        
+
+        {/* FlatList fica separada e ocupa espaço restante */}
+        <View style={styles.listContainer}>
           <FlatList
             data={clientes}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View style={styles.item}>
-                <Text style={styles.itemText}>Nome: {item.nome}</Text>
-                <Text style={styles.itemText}>Email: {item.email}</Text>
-                <Text style={styles.itemText}>CPF: {item.cpf}</Text>
-                <Text style={styles.itemText}>Logradouro: {item.logradouro}</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.itemText}>Nome: {item.nome}</Text>
+                  <Text style={styles.itemText}>Email: {item.email}</Text>
+                  <Text style={styles.itemText}>CPF: {item.cpf}</Text>
+                  <Text style={styles.itemText}>Logradouro: {item.logradouro}</Text>
+                </View>
+                <TouchableOpacity onPress={() => handleDeleteClient(item.id)}>
+                  <Ionicons name="trash-bin" size={24} color="#FF4D4D" />
+                </TouchableOpacity>
               </View>
             )}
-            contentContainerStyle={{ paddingBottom: 30 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            ListEmptyComponent={<Text style={styles.empty}>Nenhum cliente cadastrado.</Text>}
           />
+        </View>
 
-          {clientes.length > 0 && (
-            <TouchableOpacity style={styles.clearListButton} onPress={handleClearClients}>
-              <Text style={styles.buttonText}>Limpar Clientes Cadastrados</Text>
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.buttonText}>Voltar à Home</Text>
-          </TouchableOpacity>
-        </ScrollView>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+          <Text style={styles.buttonText}>Voltar à Home</Text>
+        </TouchableOpacity>
+            </ScrollView>
         <Footer />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -153,8 +166,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
-  container: {
-    padding: 24,
+  flexContainer: {
+    flex: 1,
+  },
+  formContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
   },
   input: {
     backgroundColor: '#1c1c1e',
@@ -184,28 +201,25 @@ const styles = StyleSheet.create({
     borderColor: '#888',
     marginBottom: 20,
   },
-  clearListButton: {
-    backgroundColor: '#8B0000',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#FF5555',
-    marginTop: 20,
-  },
   backButton: {
     backgroundColor: '#1c1c1e',
     borderRadius: 12,
-    paddingVertical: 14,
+    padding: 14,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#00FF88',
-    marginTop: 20,
+    marginHorizontal: 24,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 10,
   },
   item: {
     backgroundColor: '#111',
@@ -214,9 +228,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#00FF88',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   itemText: {
     color: '#fff',
     fontSize: 14,
+  },
+  empty: {
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

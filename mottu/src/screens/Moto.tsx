@@ -46,7 +46,7 @@ export default function Moto() {
         const updatedMotos = [...motos, newMoto];
         setMotos(updatedMotos);
         await AsyncStorage.setItem('motos', JSON.stringify(updatedMotos));
-        setModelo('Mottu Pop');
+        setModelo('');
         setFilial('');
         setDepartamento('');
         setPlaca('');

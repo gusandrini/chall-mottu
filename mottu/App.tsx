@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { ImageBackground, SafeAreaView, StyleSheet } from 'react-native';
 
-import backgroundImage from './src/images/fundo.png';
 import Login from './src/screens/Login';
 import Home from './src/components/Home';
 import Cliente from './src/screens/Cliente'; // Supondo que você tenha essas telas
@@ -17,7 +16,6 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <ImageBackground source={backgroundImage} style={styles.background}>
         <SafeAreaView style={styles.container}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={Login} />
@@ -29,7 +27,6 @@ export default function App() {
             <Stack.Screen name="SobreNos" component={SobreNos} />
           </Stack.Navigator>
         </SafeAreaView>
-      </ImageBackground>
     </NavigationContainer>
   );
 }
