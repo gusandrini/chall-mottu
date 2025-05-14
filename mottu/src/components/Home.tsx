@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 16,
     textAlign: 'center',
+    marginTop: 20,
   },
   highlight: {
     color: '#00FF88',
@@ -126,11 +127,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginBottom: 12,
     lineHeight: 22,
+    marginTop: 40,
   },
   bulletContainer: {
     width: '100%',
     marginBottom: 16,
-    marginTop: 12,
   },
   bulletPoint: {
     fontSize: 14,
