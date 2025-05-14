@@ -59,7 +59,7 @@ export default function SobreNos() {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#1c1c1e',
+        backgroundColor: '#000'
     },
     container: {
         padding: 20,

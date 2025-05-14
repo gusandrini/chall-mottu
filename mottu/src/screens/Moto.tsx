@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#1c1c1e',
+        backgroundColor: '#000',
     },
     title: {
         fontSize: 22,
@@ -244,12 +244,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#00FF88',
+        backgroundColor: '#222',
         paddingVertical: 15,
         borderRadius: 12,
         alignItems: 'center',
         marginTop: 20,
         marginBottom: 10,
+        borderColor:'#00FF88',
+        borderWidth: 1,
+        borderRadius: 10,
     },
     buttonText: {
         color: '#fff',
@@ -261,8 +264,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 14,
-        backgroundColor: '#2b2b2e',
+        backgroundColor: '#222',
         borderRadius: 10,
+        borderColor:'#00FF88',
+        borderWidth: 1,
     },
     itemInfo: {
         flex: 1,

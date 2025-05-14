@@ -167,7 +167,7 @@ export default function Manutencao({ navigation }: any) {
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: '#1c1c1e', // Fundo escuro para a página
+        backgroundColor: '#000'
     },
     container: {
         flex: 1,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 50,
-        borderColor: '#00FF88', // Cor verde para destaque
+        borderColor:'#00FF88',
         borderWidth: 1,
         borderRadius: 10,
         marginBottom: 20,
@@ -192,9 +192,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#00FF88', // Cor de destaque para o botão
+        backgroundColor: '#222',
         paddingVertical: 15,
-        borderRadius: 12,
+        borderColor:'#00FF88',
+        borderWidth: 1,
+        borderRadius: 10,
+        marginBottom: 20,
         alignItems: 'center',
         marginTop: 10,
     },
@@ -209,8 +212,11 @@ const styles = StyleSheet.create({
         borderBottomColor: '#888',
         marginBottom: 12,
         backgroundColor: '#222',
-        borderRadius: 8,
-        position: 'relative', // Permite posicionar o botão de delete de forma centralizada
+        borderColor:'#00FF88',
+        borderWidth: 1,
+        borderRadius: 10,
+        position: 'relative', 
+        marginTop: 30,
     },
     itemDetails: {
         flexDirection: 'row',
