@@ -22,32 +22,33 @@ const Home = () => {
   const navigation = useNavigation();
 
   const buttons = [
-    {
-      title: 'Cliente',
-      screen: 'Cliente',
-      icon: <Ionicons name="person-outline" size={22} color="#00FF88" />,
-    },
-    {
-      title: 'Funcionário',
-      screen: 'Funcionario',
-      icon: <FontAwesome5 name="user-tie" size={22} color="#00FF88" />,
-    },
-    {
-      title: 'Manutenção',
-      screen: 'Manutencao',
-      icon: <MaterialCommunityIcons name="tools" size={22} color="#00FF88" />,
-    },
-    {
-      title: 'Moto',
-      screen: 'Moto',
-      icon: <MaterialCommunityIcons name="motorbike" size={22} color="#00FF88" />,
-    },
-    {
-      title: 'Sobre Nós',
-      screen: 'SobreNos',
-      icon: <Feather name="info" size={22} color="#00FF88" />,
-    },
-  ];
+  {
+    title: 'Cliente',
+    screen: 'Cliente',
+    icon: <Ionicons name="person-outline" size={22} color="#00FF88" />,
+  },
+  {
+    title: 'Moto',
+    screen: 'Moto',
+    icon: <MaterialCommunityIcons name="motorbike" size={22} color="#00FF88" />,
+  },
+  {
+    title: 'Manutenção',
+    screen: 'Manutencao',
+    icon: <MaterialCommunityIcons name="tools" size={22} color="#00FF88" />,
+  },
+  {
+    title: 'Funcionário',
+    screen: 'Funcionario',
+    icon: <FontAwesome5 name="user-tie" size={22} color="#00FF88" />,
+  },
+  {
+    title: 'Sobre Nós',
+    screen: 'SobreNos',
+    icon: <Feather name="info" size={22} color="#00FF88" />,
+  },
+];
+
 
   return (
     <View style={styles.screen}>

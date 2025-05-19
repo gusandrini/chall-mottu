@@ -8,7 +8,7 @@ type Props = {
 export default function Footer({ style }: Props) {
   return (
     <View style={[styles.footer, style]}>
-      <Text style={styles.text}>© 2025 Sua Empresa</Text>
+      <Text style={styles.text}>© 2025 SGF</Text>
     </View>
   );
 }

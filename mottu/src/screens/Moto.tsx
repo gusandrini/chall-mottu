@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
     FlatList,
+    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -22,6 +23,8 @@ type Moto = {
     placa: string;
     status: string;
     kmRodado: number;
+    cordX: string;
+    cordY: string;
 };
 
 export default function Moto({ navigation }) {
@@ -32,6 +35,8 @@ export default function Moto({ navigation }) {
     const [placa, setPlaca] = useState('');
     const [status, setStatus] = useState('');
     const [kmRodado, setKmRodado] = useState(0);
+    const [cordX, setCordX] = useState('');
+    const [cordY, setCordY] = useState('');
 
     useEffect(() => {
         const loadData = async () => {
@@ -49,7 +54,7 @@ export default function Moto({ navigation }) {
     };
 
     const handleAddMoto = async () => {
-        if (!modelo || !filial || !departamento || !placa || !status || !kmRodado) {
+        if (!modelo || !filial || !departamento || !placa || !status || !kmRodado || !cordX || !cordY) {
             Alert.alert('Erro', 'Preencha todos os campos antes de adicionar.');
             return;
         }
@@ -67,6 +72,8 @@ export default function Moto({ navigation }) {
             placa: placa.toUpperCase(),
             status,
             kmRodado,
+            cordX,
+            cordY,
         };
 
         const updatedMotos = [...motos, newMoto];
@@ -79,6 +86,9 @@ export default function Moto({ navigation }) {
         setPlaca('');
         setStatus('');
         setKmRodado(0);
+        setCordX('');
+        setCordY('');
+        Alert.alert('Sucesso', 'Moto adicionada com sucesso!');
     };
 
     const handleDelete = async (id: string) => {
@@ -90,116 +100,149 @@ export default function Moto({ navigation }) {
     return (
         <View style={styles.container}>
             <Header />
-            <Text style={styles.title}>Cadastro de Motos</Text>
 
-            <Text style={styles.label}>Modelo</Text>
-            <View style={styles.inputContainer}>
-                <Ionicons name="construct" size={20} color="#00FF88" />
-                <Picker
-                    selectedValue={modelo}
-                    onValueChange={(itemValue) => setModelo(itemValue)}
-                    style={styles.picker}
-                    dropdownIconColor="#00FF88"
-                >
-                    <Picker.Item label="Mottu Pop" value="Mottu Pop" />
-                    <Picker.Item label="Mottu Sport" value="Mottu Sport" />
-                </Picker>
-            </View>
+            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                <Text style={styles.title}>Cadastro de Motos</Text>
 
-            <View style={styles.inputContainer}>
-                <Ionicons name="business" size={20} color="#00FF88" />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Filial"
-                    placeholderTextColor="#aaa"
-                    value={filial}
-                    onChangeText={setFilial}
-                />
-            </View>
+                <Text style={styles.label}>Modelo</Text>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="construct" size={20} color="#00FF88" />
+                    <Picker
+                        selectedValue={modelo}
+                        onValueChange={(itemValue) => setModelo(itemValue)}
+                        style={styles.picker}
+                        dropdownIconColor="#00FF88"
+                    >
+                        <Picker.Item label="Mottu Pop" value="Mottu Pop" />
+                        <Picker.Item label="Mottu Sport" value="Mottu Sport" />
+                    </Picker>
+                </View>
 
-            <View style={styles.inputContainer}>
-                <Ionicons name="people" size={20} color="#00FF88" />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Departamento"
-                    placeholderTextColor="#aaa"
-                    value={departamento}
-                    onChangeText={setDepartamento}
-                />
-            </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="business" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Filial"
+                        placeholderTextColor="#aaa"
+                        value={filial}
+                        onChangeText={setFilial}
+                    />
+                </View>
 
-            <View style={styles.inputContainer}>
-                <Ionicons name="ios-car" size={20} color="#00FF88" />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Placa (ABC1234)"
-                    placeholderTextColor="#aaa"
-                    autoCapitalize="characters"
-                    value={placa}
-                    onChangeText={setPlaca}
-                />
-            </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="people" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Departamento"
+                        placeholderTextColor="#aaa"
+                        value={departamento}
+                        onChangeText={setDepartamento}
+                    />
+                </View>
 
-            <View style={styles.inputContainer}>
-                <Ionicons name="shield-checkmark" size={20} color="#00FF88" />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Status"
-                    placeholderTextColor="#aaa"
-                    value={status}
-                    onChangeText={setStatus}
-                />
-            </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="ios-car" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Placa (ABC1234)"
+                        placeholderTextColor="#aaa"
+                        autoCapitalize="characters"
+                        value={placa}
+                        onChangeText={setPlaca}
+                    />
+                </View>
 
-            <View style={styles.inputContainer}>
-                <Ionicons name="speedometer" size={20} color="#00FF88" />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Km Rodado"
-                    placeholderTextColor="#aaa"
-                    keyboardType="numeric"
-                    value={kmRodado.toString()}
-                    onChangeText={(text) => setKmRodado(Number(text))}
-                />
-            </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="shield-checkmark" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Status"
+                        placeholderTextColor="#aaa"
+                        value={status}
+                        onChangeText={setStatus}
+                    />
+                </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleAddMoto}>
-                <Text style={styles.buttonText}>Adicionar Moto</Text>
-            </TouchableOpacity>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="speedometer" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Km Rodado"
+                        placeholderTextColor="#aaa"
+                        keyboardType="numeric"
+                        value={kmRodado.toString()}
+                        onChangeText={(text) => setKmRodado(Number(text))}
+                    />
+                </View>
 
-            {motos.length > 0 && (
-                <Text style={styles.sectionTitle}>Motos Cadastradas:</Text>
-            )}
+                <View style={styles.inputContainer}>
+                    <Ionicons name="location" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Coordenadas X"
+                        placeholderTextColor="#aaa"
+                        keyboardType="numeric"
+                        value={cordX.toString()}
+                        onChangeText={setCordX}
+                    />
+                </View>
 
-            <FlatList
-                data={motos}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <View style={styles.itemInfo}>
-                            <Text style={styles.itemTitle}>{item.modelo} - {item.placa}</Text>
-                            <Text style={styles.itemDetail}><Ionicons name="business" size={16} color="#00FF88" /> {item.filial}</Text>
-                            <Text style={styles.itemDetail}><Ionicons name="people" size={16} color="#00FF88" /> {item.departamento}</Text>
-                            <Text style={styles.itemDetail}><Ionicons name="shield-checkmark" size={16} color="#00FF88" /> {item.status}</Text>
-                            <Text style={styles.itemDetail}><Ionicons name="speedometer" size={16} color="#00FF88" /> {item.kmRodado}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                            <Ionicons name="trash" size={24} color="#FF5C5C" />
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="location" size={20} color="#00FF88" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Coordenadas Y"
+                        placeholderTextColor="#aaa"
+                        keyboardType="numeric"
+                        value={cordY.toString()}
+                        onChangeText={setCordY}
+                    />
+                </View>
+
+                <TouchableOpacity style={styles.button} onPress={handleAddMoto}>
+                    <Text style={styles.buttonText}>Adicionar Moto</Text>
+                </TouchableOpacity>
+
+                {motos.length > 0 && (
+                    <Text style={styles.sectionTitle}>Motos Cadastradas:</Text>
                 )}
-                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            />
 
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-                <Ionicons name="arrow-back-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
-                <Text style={styles.buttonText}>Voltar ao Home</Text>
-            </TouchableOpacity>
+                <FlatList
+                    data={motos}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View style={styles.item}>
+                            <View style={styles.itemInfo}>
+                                <Text style={styles.itemTitle}>{item.modelo} - {item.placa}</Text>
+                                <Text style={styles.itemDetail}><Ionicons name="business" size={16} color="#00FF88" /> {item.filial}</Text>
+                                <Text style={styles.itemDetail}><Ionicons name="people" size={16} color="#00FF88" /> {item.departamento}</Text>
+                                <Text style={styles.itemDetail}><Ionicons name="shield-checkmark" size={16} color="#00FF88" /> {item.status}</Text>
+                                <Text style={styles.itemDetail}><Ionicons name="speedometer" size={16} color="#00FF88" /> {item.kmRodado}</Text>
+                                
+                                
+                            </View>
+                            <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                                <Ionicons name="trash" size={24} color="#FF5C5C" />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                    style={{ marginBottom: 20 }}
+                />
+
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name="arrow-back-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                    <Text style={styles.buttonText}>Voltar ao Home</Text>
+                </TouchableOpacity>
+
+                <View style={{ height: 20 }} /> {/* espaço antes do footer */}
+            </ScrollView>
 
             <Footer />
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
