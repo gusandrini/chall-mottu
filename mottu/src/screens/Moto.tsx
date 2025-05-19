@@ -218,7 +218,7 @@ export default function Moto({ navigation }) {
                                 <Text style={styles.itemDetail}><Ionicons name="people" size={16} color="#00FF88" /> {item.departamento}</Text>
                                 <Text style={styles.itemDetail}><Ionicons name="shield-checkmark" size={16} color="#00FF88" /> {item.status}</Text>
                                 <Text style={styles.itemDetail}><Ionicons name="speedometer" size={16} color="#00FF88" /> {item.kmRodado}</Text>
-                                
+                                <Text style={styles.itemDetail}><Ionicons name="location" size={16} color="#00FF88" /> {item.cordX}, {item.cordY}</Text>
                                 
                             </View>
                             <TouchableOpacity onPress={() => handleDelete(item.id)}>
