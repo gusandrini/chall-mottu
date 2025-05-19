@@ -10,8 +10,8 @@ import {
     View,
     TouchableOpacity,
     Alert,
+    Modal,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -38,6 +38,13 @@ export default function Moto({ navigation }) {
     const [cordX, setCordX] = useState('');
     const [cordY, setCordY] = useState('');
 
+    // Estados para controlar a exibição dos modais
+    const [showModeloModal, setShowModeloModal] = useState(false);
+    const [showStatusModal, setShowStatusModal] = useState(false);
+
+    const modelosDisponiveis = ['Mottu Pop', 'Mottu Sport'];
+    const statusDisponiveis = ['Disponível', 'Em Uso', 'Manutenção'];
+
     useEffect(() => {
         const loadData = async () => {
             const storedMotos = await AsyncStorage.getItem('motos');
@@ -54,13 +61,25 @@ export default function Moto({ navigation }) {
     };
 
     const handleAddMoto = async () => {
-        if (!modelo || !filial || !departamento || !placa || !status || !kmRodado || !cordX || !cordY) {
+        if (
+            !modelo ||
+            !filial ||
+            !departamento ||
+            !placa ||
+            !status ||
+            !kmRodado ||
+            !cordX ||
+            !cordY
+        ) {
             Alert.alert('Erro', 'Preencha todos os campos antes de adicionar.');
             return;
         }
 
         if (!validarPlaca(placa)) {
-            Alert.alert('Erro', 'A placa deve estar no formato correto (ex: ABC1234 ou ABC1D23).');
+            Alert.alert(
+                'Erro',
+                'A placa deve estar no formato correto (ex: ABC1234 ou ABC1D23).'
+            );
             return;
         }
 
@@ -104,20 +123,52 @@ export default function Moto({ navigation }) {
             <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                 <Text style={styles.title}>Cadastro de Motos</Text>
 
-                <Text style={styles.label}>Modelo</Text>
+                {/* Modelo com Modal */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="construct" size={20} color="#00FF88" />
-                    <Picker
-                        selectedValue={modelo}
-                        onValueChange={(itemValue) => setModelo(itemValue)}
-                        style={styles.picker}
-                        dropdownIconColor="#00FF88"
+                    <TouchableOpacity
+                        style={styles.input}
+                        onPress={() => setShowModeloModal(true)}
                     >
-                        <Picker.Item label="Mottu Pop" value="Mottu Pop" />
-                        <Picker.Item label="Mottu Sport" value="Mottu Sport" />
-                    </Picker>
+                        <Text style={{ color: '#fff', fontSize: 16 }}>
+                            {modelo || 'Selecione o modelo'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
+                {/* Modal Modelo */}
+                <Modal
+                    visible={showModeloModal}
+                    animationType="slide"
+                    transparent
+                    onRequestClose={() => setShowModeloModal(false)}
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+                            {modelosDisponiveis.map((item) => (
+                                <TouchableOpacity
+                                    key={item}
+                                    style={styles.modalItem}
+                                    onPress={() => {
+                                        setModelo(item);
+                                        setShowModeloModal(false);
+                                    }}
+                                >
+                                    <Text style={{ color: '#fff', fontSize: 16 }}>{item}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity onPress={() => setShowModeloModal(false)}>
+                                <Text
+                                    style={{ color: '#FF5C5C', textAlign: 'center', marginTop: 10 }}
+                                >
+                                    Cancelar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                {/* Filial */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="business" size={20} color="#00FF88" />
                     <TextInput
@@ -129,6 +180,7 @@ export default function Moto({ navigation }) {
                     />
                 </View>
 
+                {/* Departamento */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="people" size={20} color="#00FF88" />
                     <TextInput
@@ -140,8 +192,9 @@ export default function Moto({ navigation }) {
                     />
                 </View>
 
+                {/* Placa */}
                 <View style={styles.inputContainer}>
-                    <Ionicons name="ios-car" size={20} color="#00FF88" />
+                    <Ionicons name="list" size={20} color="#00FF88" />
                     <TextInput
                         style={styles.input}
                         placeholder="Placa (ABC1234)"
@@ -152,17 +205,52 @@ export default function Moto({ navigation }) {
                     />
                 </View>
 
+                {/* Status com Modal */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="shield-checkmark" size={20} color="#00FF88" />
-                    <TextInput
+                    <TouchableOpacity
                         style={styles.input}
-                        placeholder="Status"
-                        placeholderTextColor="#aaa"
-                        value={status}
-                        onChangeText={setStatus}
-                    />
+                        onPress={() => setShowStatusModal(true)}
+                    >
+                        <Text style={{ color: '#fff', fontSize: 16 }}>
+                            {status || 'Selecione o status'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
+                {/* Modal Status */}
+                <Modal
+                    visible={showStatusModal}
+                    animationType="slide"
+                    transparent
+                    onRequestClose={() => setShowStatusModal(false)}
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+                            {statusDisponiveis.map((item) => (
+                                <TouchableOpacity
+                                    key={item}
+                                    style={styles.modalItem}
+                                    onPress={() => {
+                                        setStatus(item);
+                                        setShowStatusModal(false);
+                                    }}
+                                >
+                                    <Text style={{ color: '#fff', fontSize: 16 }}>{item}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            <TouchableOpacity onPress={() => setShowStatusModal(false)}>
+                                <Text
+                                    style={{ color: '#FF5C5C', textAlign: 'center', marginTop: 10 }}
+                                >
+                                    Cancelar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                {/* Km Rodado */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="speedometer" size={20} color="#00FF88" />
                     <TextInput
@@ -175,6 +263,7 @@ export default function Moto({ navigation }) {
                     />
                 </View>
 
+                {/* Coordenadas X */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="location" size={20} color="#00FF88" />
                     <TextInput
@@ -187,6 +276,7 @@ export default function Moto({ navigation }) {
                     />
                 </View>
 
+                {/* Coordenadas Y */}
                 <View style={styles.inputContainer}>
                     <Ionicons name="location" size={20} color="#00FF88" />
                     <TextInput
@@ -203,6 +293,8 @@ export default function Moto({ navigation }) {
                     <Text style={styles.buttonText}>Adicionar Moto</Text>
                 </TouchableOpacity>
 
+
+
                 {motos.length > 0 && (
                     <Text style={styles.sectionTitle}>Motos Cadastradas:</Text>
                 )}
@@ -211,128 +303,142 @@ export default function Moto({ navigation }) {
                     data={motos}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <View style={styles.item}>
-                            <View style={styles.itemInfo}>
-                                <Text style={styles.itemTitle}>{item.modelo} - {item.placa}</Text>
-                                <Text style={styles.itemDetail}><Ionicons name="business" size={16} color="#00FF88" /> {item.filial}</Text>
-                                <Text style={styles.itemDetail}><Ionicons name="people" size={16} color="#00FF88" /> {item.departamento}</Text>
-                                <Text style={styles.itemDetail}><Ionicons name="shield-checkmark" size={16} color="#00FF88" /> {item.status}</Text>
-                                <Text style={styles.itemDetail}><Ionicons name="speedometer" size={16} color="#00FF88" /> {item.kmRodado}</Text>
-                                <Text style={styles.itemDetail}><Ionicons name="location" size={16} color="#00FF88" /> {item.cordX}, {item.cordY}</Text>
-                                
+                        <View style={styles.motoItem}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.motoText}>
+                                    <Ionicons name="construct" size={16} color="#00FF88" /> Modelo: {item.modelo}
+                                </Text>
+                                <Text style={styles.motoText}>
+                                    <Ionicons name="list" size={16} color="#00FF88" /> Placa: {item.placa}
+                                </Text>
+                                <Text style={styles.motoText}>
+                                    <Ionicons name="shield-checkmark" size={16} color="#00FF88" /> Status: {item.status}
+                                </Text>
+                                <Text style={styles.motoText}>
+                                    <Ionicons name="speedometer" size={16} color="#00FF88" /> Km Rodado: {item.kmRodado}
+                                </Text>
+                                <Text style={styles.motoText}>
+                                    <Ionicons name="location" size={16} color="#00FF88" /> Coordenadas: ({item.cordX}, {item.cordY})
+                                </Text>
                             </View>
                             <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                                <Ionicons name="trash" size={24} color="#FF5C5C" />
+                                <Ionicons name="trash-bin-outline" size={24} color="#FF4D4D" />
                             </TouchableOpacity>
                         </View>
                     )}
-                    ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-                    style={{ marginBottom: 20 }}
                 />
 
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name="arrow-back-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                    <Ionicons name="arrow-back-outline" size={20} color="#fff" />
                     <Text style={styles.buttonText}>Voltar ao Home</Text>
                 </TouchableOpacity>
-
-                <View style={{ height: 20 }} /> {/* espaço antes do footer */}
             </ScrollView>
-
             <Footer />
         </View>
     );
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
         backgroundColor: '#000',
     },
     title: {
-        fontSize: 22,
-        color: '#00FF88',
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 20,
+        color: '#00FF88',
+        marginTop: 20,
+        marginBottom: 10,
         textAlign: 'center',
     },
     label: {
-        fontWeight: 'bold',
-        marginBottom: 4,
-        color: '#fff',
+        color: '#00FF88',
+        fontWeight: '600',
+        marginLeft: 10,
+        marginBottom: 5,
+        marginTop: 15,
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 12,
-        borderWidth: 1,
         borderColor: '#00FF88',
-        borderRadius: 8,
-        paddingLeft: 10,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginHorizontal: 15,
+        marginVertical: 7,
+        height: 40,
     },
     input: {
         flex: 1,
-        height: 40,
-        paddingLeft: 8,
         color: '#fff',
+
         fontSize: 16,
-    },
-    picker: {
-        flex: 1,
-        height: 40,
-        color: '#fff',
-        backgroundColor: 'transparent',
-        marginLeft: 8,
-        fontSize: 16,
+        paddingLeft: 10,
     },
     button: {
         backgroundColor: '#222',
         paddingVertical: 15,
-        borderRadius: 12,
-        alignItems: 'center',
-        marginTop: 20,
-        marginBottom: 10,
-        borderColor:'#00FF88',
+        borderColor: '#00FF88',
         borderWidth: 1,
         borderRadius: 10,
+        marginBottom: 20,
+        alignItems: 'center',
+        marginTop: 10,
+        marginHorizontal: 15,
     },
     buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: '600',
     },
-    item: {
+    sectionTitle: {
+        color: '#00FF88',
+        fontSize: 22,
+        fontWeight: '600',
+        marginLeft: 20,
+        marginTop: 20,
+        marginBottom: 10,
+    },
+    motoItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 14,
-        backgroundColor: '#222',
-        borderRadius: 10,
-        borderColor:'#00FF88',
-        borderWidth: 1,
+        backgroundColor: '#111',
+        padding: 15,
+        marginHorizontal: 20,
+        marginVertical: 6,
+        borderRadius: 8,
     },
-    itemInfo: {
-        flex: 1,
-        paddingRight: 10,
-    },
-    itemTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#00FF88',
-        marginBottom: 4,
-    },
-    itemDetail: {
-        color: '#eee',
-        fontSize: 14,
-        marginTop: 2,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+    motoText: {
         color: '#fff',
-        marginTop: 20,
-        marginBottom: 10,
+        fontSize: 16,
+        flex: 1,
+    },
+    deleteButton: {
+        backgroundColor: '#FF5C5C',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: '#1c1c1e',
+        borderRadius: 10,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#00FF88',
+    },
+    modalItem: {
+        paddingVertical: 12,
+        borderBottomColor: '#333',
+        borderBottomWidth: 1,
     },
     backButton: {
         flexDirection: 'row',
@@ -343,6 +449,8 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         borderWidth: 1,
         borderColor: '#00FF88',
-        marginTop: 16,
+        marginTop: 20,
+        marginBottom: 20,
+        marginHorizontal: 15,
     },
 });
