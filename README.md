@@ -51,8 +51,8 @@ cd mottu
 
 ### 📱 App Mobile (React Native com Expo)
 ```bash
-cd mobile
-npm install
+cd mottu
+npm i
 npm start
 ```
 
