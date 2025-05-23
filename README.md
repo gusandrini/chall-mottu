@@ -6,11 +6,11 @@
 
 ## 👥 Integrantes
 
-| Nome Completo        | RM       |
-|----------------------|----------|
-| Gustavo Sandrini     | 557505   |
-| Eduarda Tiemi        | 554756   |
-| Felipe Pizzinato     | 555141   |
+| Nome Completo        | RM       | Turma   |
+|----------------------|----------|---------|
+| Gustavo Sandrini     | 557505   | 2TDSPW  |
+| Eduarda Tiemi        | 554756   | 2TDSPH  |
+| Felipe Pizzinato     | 555141   | 2TDSPH  |
 
 ---
 
