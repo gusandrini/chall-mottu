@@ -17,61 +17,69 @@ import {
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { useTheme } from '../context/ThemeContext';
 
 const Home = () => {
   const navigation = useNavigation();
+  const { theme, toggleTheme } = useTheme();
 
   const buttons = [
-  {
-    title: 'Cliente',
-    screen: 'Cliente',
-    icon: <Ionicons name="person-outline" size={22} color="#00FF88" />,
-  },
-  {
-    title: 'Moto',
-    screen: 'Moto',
-    icon: <MaterialCommunityIcons name="motorbike" size={22} color="#00FF88" />,
-  },
-  {
-    title: 'Manutenção',
-    screen: 'Manutencao',
-    icon: <MaterialCommunityIcons name="tools" size={22} color="#00FF88" />,
-  },
-  {
-    title: 'Funcionário',
-    screen: 'Funcionario',
-    icon: <FontAwesome5 name="user-tie" size={22} color="#00FF88" />,
-  },
-  {
-    title: 'Sobre Nós',
-    screen: 'SobreNos',
-    icon: <Feather name="info" size={22} color="#00FF88" />,
-  },
-];
-
+    {
+      title: 'Cliente',
+      screen: 'Cliente',
+      icon: <Ionicons name="person-outline" size={22} color={theme.primary} />,
+    },
+    {
+      title: 'Moto',
+      screen: 'Moto',
+      icon: <MaterialCommunityIcons name="motorbike" size={22} color={theme.primary} />,
+    },
+    {
+      title: 'Manutenção',
+      screen: 'Manutencao',
+      icon: <MaterialCommunityIcons name="tools" size={22} color={theme.primary} />,
+    },
+    {
+      title: 'Funcionário',
+      screen: 'Funcionario',
+      icon: <FontAwesome5 name="user-tie" size={22} color={theme.primary} />,
+    },
+    {
+      title: 'Sobre Nós',
+      screen: 'SobreNos',
+      icon: <Feather name="info" size={22} color={theme.primary} />,
+    },
+  ];
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
       <Header />
 
+      {/* Botão para alternar tema */}
+      <TouchableOpacity style={[styles.themeButton, { backgroundColor: theme.primary }]} onPress={toggleTheme}>
+        <Text style={{ color: theme.text }}>
+          {theme.background === '#000' ? '🌞 Modo Claro' : '🌙 Modo Escuro'}
+        </Text>
+      </TouchableOpacity>
+
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: theme.text }]}>
           Controle Inteligente{'\n'}
-          <Text style={styles.highlight}>Mottu em Movimento</Text>
+          <Text style={{ color: theme.primary }}>Mottu em Movimento</Text>
         </Text>
 
-        <Text style={styles.description}>
+        <Text style={[styles.description, { color: theme.text }]}>
           Bem-vindo ao sistema da Mottu! Aqui, você gerencia com praticidade e agilidade todas as operações essenciais da sua unidade.
         </Text>
 
         <View style={styles.bulletContainer}>
-          <Text style={styles.bulletPoint}>• Consultar e editar dados de clientes e funcionários;</Text>
-          <Text style={styles.bulletPoint}>• Gerenciar motos e acompanhar manutenções em tempo real;</Text>
-          <Text style={styles.bulletPoint}>• Visualizar informações importantes sobre cada filial;</Text>
-          <Text style={styles.bulletPoint}>• Acessar um painel completo com apenas alguns toques.</Text>
+          <Text style={[styles.bulletPoint, { color: theme.text }]}>• Consultar e editar dados de clientes e funcionários;</Text>
+          <Text style={[styles.bulletPoint, { color: theme.text }]}>• Gerenciar motos e acompanhar manutenções em tempo real;</Text>
+          <Text style={[styles.bulletPoint, { color: theme.text }]}>• Visualizar informações importantes sobre cada filial;</Text>
+          <Text style={[styles.bulletPoint, { color: theme.text }]}>• Acessar um painel completo com apenas alguns toques.</Text>
         </View>
 
-        <Text style={styles.descriptionBottom}>
+        <Text style={[styles.descriptionBottom, { color: theme.text }]}>
           Toque em uma das opções abaixo para começar. Sua jornada de eficiência começa agora!
         </Text>
 
@@ -79,13 +87,13 @@ const Home = () => {
           {buttons.map((btn, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.button}
-              onPress={() => navigation.navigate(btn.screen)}
+              style={[styles.button, { borderColor: theme.primary, backgroundColor: theme.background }]}
+              onPress={() => navigation.navigate(btn.screen as never)}
               activeOpacity={0.8}
             >
               <View style={styles.iconLabel}>
                 {btn.icon}
-                <Text style={styles.buttonText}>{btn.title}</Text>
+                <Text style={[styles.buttonText, { color: theme.text }]}>{btn.title}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -104,27 +112,28 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#000',
   },
   container: {
     padding: 24,
     paddingBottom: 100,
     alignItems: 'center',
   },
+  themeButton: {
+    alignSelf: 'flex-end',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    margin: 12,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 16,
     textAlign: 'center',
     marginTop: 20,
   },
-  highlight: {
-    color: '#00FF88',
-  },
   description: {
     fontSize: 15,
-    color: '#ccc',
     textAlign: 'left',
     marginBottom: 12,
     lineHeight: 22,
@@ -136,13 +145,11 @@ const styles = StyleSheet.create({
   },
   bulletPoint: {
     fontSize: 14,
-    color: '#aaa',
     marginBottom: 6,
     paddingLeft: 10,
   },
   descriptionBottom: {
     fontSize: 15,
-    color: '#ccc',
     textAlign: 'left',
     marginBottom: 24,
     lineHeight: 22,
@@ -152,13 +159,10 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   button: {
-    backgroundColor: '#1c1c1e',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#00FF88',
-    shadowColor: '#00FF88',
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
@@ -172,7 +176,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   buttonText: {
-    color: '#fff',
     fontSize: 17,
     fontWeight: '600',
   },
