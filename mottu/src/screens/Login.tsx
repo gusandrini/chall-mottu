@@ -1,5 +1,4 @@
 // src/screens/Login.tsx
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -7,48 +6,55 @@ import {
   View,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useSession } from '../services/SessionProvider';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Login({ navigation }: any) {
+  const { login } = useSession();
+  const { theme, toggleTheme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    if (email === 'teste@teste.com' && password === '000000') {
-      await AsyncStorage.setItem('user', JSON.stringify({ email }));
-      navigation.navigate('Home');
-    } else {
-      Alert.alert('Erro', 'Credenciais inválidas');
+  async function handleLogin() {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Atenção', 'Preencha e-mail e senha.');
+      return;
     }
-  };
+    const ok = await login(email, password);
+    if (!ok) {
+      Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
+      return;
+    }
+    navigation.replace('Home');
+  }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <View style={styles.container}>
-        <Text style={styles.title}>Bem-vindo</Text>
+        <Text style={[styles.title, { color: theme.primary }]}>Bem-vindo</Text>
 
-        {/* Campo Email */}
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={20} color="#00FF88" style={styles.icon} />
+        <View style={[styles.inputContainer, { borderColor: theme.primary, backgroundColor: theme.background }]}>
+          <Ionicons name="mail-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text }]}
             placeholder="Email"
             placeholderTextColor="#888"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
+            autoCorrect={false}
           />
         </View>
 
-        {/* Campo Senha */}
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#00FF88" style={styles.icon} />
+        <View style={[styles.inputContainer, { borderColor: theme.primary, backgroundColor: theme.background }]}>
+          <Ionicons name="lock-closed-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.text }]}
             placeholder="Senha"
             placeholderTextColor="#888"
             secureTextEntry
@@ -57,9 +63,22 @@ export default function Login({ navigation }: any) {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.primary }]}
+          onPress={handleLogin}
+        >
           <Ionicons name="log-in-outline" size={20} color="#fff" />
           <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+
+        {/* 🔹 Botão para alternar tema */}
+        <TouchableOpacity
+          style={[styles.themeButton, { backgroundColor: theme.primary }]}
+          onPress={toggleTheme}
+        >
+          <Text style={{ color: '#fff', fontWeight: '600' }}>
+            {theme.background === '#000' ? '🌞 Modo Claro' : '🌙 Modo Escuro'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -67,54 +86,38 @@ export default function Login({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#1c1c1e',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 32,
-  },
+  safeArea: { flex: 1 },
+  container: { flex: 1, justifyContent: 'center', padding: 32 },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#00FF88',
     textAlign: 'center',
     marginBottom: 40,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#00FF88',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 12,
     marginBottom: 20,
-    backgroundColor: '#2c2c2e',
   },
-  icon: {
-    marginRight: 8,
-  },
-  input: {
-    flex: 1,
-    height: 50,
-    color: '#fff',
-    fontSize: 16,
-  },
+  icon: { marginRight: 8 },
+  input: { flex: 1, height: 50, fontSize: 16 },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00FF88',
     paddingVertical: 14,
     borderRadius: 12,
     marginTop: 10,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 8,
+  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600', marginLeft: 8 },
+  themeButton: {
+    marginTop: 20,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
 });
