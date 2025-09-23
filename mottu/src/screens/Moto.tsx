@@ -1,456 +1,316 @@
-import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-    TouchableOpacity,
-    Alert,
-    Modal,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-type Moto = {
-    id: string;
-    modelo: string;
-    filial: string;
-    departamento: string;
-    placa: string;
-    status: string;
-    kmRodado: number;
-    cordX: string;
-    cordY: string;
-};
+import { useTheme } from '../context/ThemeContext';
+import { Moto } from '../models/moto';
+import { getMotos, addMoto, updateMoto, deleteMoto } from '../api/moto';
 
-export default function Moto({ navigation }) {
-    const [motos, setMotos] = useState<Moto[]>([]);
-    const [modelo, setModelo] = useState('Mottu Pop');
-    const [filial, setFilial] = useState('');
-    const [departamento, setDepartamento] = useState('');
-    const [placa, setPlaca] = useState('');
-    const [status, setStatus] = useState('');
-    const [kmRodado, setKmRodado] = useState(0);
-    const [cordX, setCordX] = useState('');
-    const [cordY, setCordY] = useState('');
+export default function MotoScreen({ navigation }: any) {
+  const { theme } = useTheme();
 
-    // Estados para controlar a exibição dos modais
-    const [showModeloModal, setShowModeloModal] = useState(false);
-    const [showStatusModal, setShowStatusModal] = useState(false);
+  const [motos, setMotos] = useState<Moto[]>([]);
+  const [idCliente, setIdCliente] = useState('');
+  const [idFilialDepartamento, setIdFilialDepartamento] = useState('');
+  const [modelo, setModelo] = useState('');
+  const [placa, setPlaca] = useState('');
+  const [kmRodado, setKmRodado] = useState('');
+  const [status, setStatus] = useState('');
 
-    const modelosDisponiveis = ['Mottu Pop', 'Mottu Sport'];
-    const statusDisponiveis = ['Disponível', 'Em Uso', 'Manutenção'];
+  const [loading, setLoading] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
 
-    useEffect(() => {
-        const loadData = async () => {
-            const storedMotos = await AsyncStorage.getItem('motos');
-            if (storedMotos) {
-                setMotos(JSON.parse(storedMotos));
-            }
-        };
-        loadData();
-    }, []);
+  // 🔹 Buscar dados
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await getMotos();
+      setMotos(response.data || []);
+    } catch {
+      Alert.alert('Erro', 'Não foi possível carregar as motos.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const validarPlaca = (placa: string) => {
-        const regex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/i;
-        return regex.test(placa);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // 🔹 Salvar ou atualizar
+  const handleSave = async () => {
+    if (!idCliente || !idFilialDepartamento || !modelo || !placa || !kmRodado || !status) {
+      Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const payload: Moto = {
+      idMoto: editId ?? 0,
+      cliente: { idCliente: parseInt(idCliente, 10) },
+      filialDepartamento: { idFilialDepartamento: parseInt(idFilialDepartamento, 10) },
+      nmModelo: modelo,
+      nmPlaca: placa.toUpperCase(),
+      kmRodado: parseFloat(kmRodado),
+      stMoto: status,
     };
 
-    const handleAddMoto = async () => {
-        if (
-            !modelo ||
-            !filial ||
-            !departamento ||
-            !placa ||
-            !status ||
-            !kmRodado ||
-            !cordX ||
-            !cordY
-        ) {
-            Alert.alert('Erro', 'Preencha todos os campos antes de adicionar.');
-            return;
+    try {
+      if (editId) {
+        await updateMoto(payload);
+        Alert.alert('Sucesso', 'Moto atualizada!');
+      } else {
+        await addMoto(payload);
+        Alert.alert('Sucesso', 'Moto cadastrada!');
+      }
+      fetchData();
+      resetForm();
+    } catch {
+      Alert.alert('Erro', 'Não foi possível salvar.');
+    }
+  };
+
+  // 🔹 Excluir
+  const handleDelete = (idMoto: number) => {
+    Alert.alert('Confirmação', 'Deseja realmente excluir?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await deleteMoto(idMoto);
+            Alert.alert('Sucesso', 'Moto excluída!');
+            fetchData();
+          } catch {
+            Alert.alert('Erro', 'Não foi possível excluir.');
+          }
+        },
+      },
+    ]);
+  };
+
+  // 🔹 Editar
+  const handleEdit = (item: Moto) => {
+    setEditId(item.idMoto);
+    setIdCliente(item.cliente?.idCliente?.toString() || '');
+    setIdFilialDepartamento(item.filialDepartamento?.idFilialDepartamento?.toString() || '');
+    setModelo(item.nmModelo);
+    setPlaca(item.nmPlaca);
+    setKmRodado(item.kmRodado?.toString() || '');
+    setStatus(item.stMoto);
+  };
+
+  const resetForm = () => {
+    setIdCliente('');
+    setIdFilialDepartamento('');
+    setModelo('');
+    setPlaca('');
+    setKmRodado('');
+    setStatus('');
+    setEditId(null);
+  };
+
+  const renderItem = ({ item }: { item: Moto }) => (
+    <View
+      style={[
+        styles.motoItem,
+        { backgroundColor: theme.background, borderColor: theme.primary },
+      ]}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={[styles.motoText, { color: theme.text }]}>
+          Modelo: {item.nmModelo}
+        </Text>
+        <Text style={[styles.motoText, { color: theme.text }]}>
+          Placa: {item.nmPlaca}
+        </Text>
+        <Text style={[styles.motoText, { color: theme.text }]}>
+          Status: {item.stMoto}
+        </Text>
+        <Text style={[styles.motoText, { color: theme.text }]}>
+          Km Rodado: {item.kmRodado}
+        </Text>
+      </View>
+
+      <View style={styles.actions}>
+        <TouchableOpacity onPress={() => handleEdit(item)}>
+          <Ionicons name="create-outline" size={22} color={theme.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDelete(item.idMoto)}>
+          <Ionicons name="trash-bin-outline" size={22} color="red" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header />
+
+      <FlatList
+        data={motos}
+        keyExtractor={(item) => item.idMoto.toString()}
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <>
+            <Text style={[styles.title, { color: theme.primary }]}>
+              {editId ? 'Editar Moto' : 'Cadastro de Motos'}
+            </Text>
+
+            {/* Inputs */}
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="ID Cliente"
+              placeholderTextColor="#888"
+              value={idCliente}
+              onChangeText={setIdCliente}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="ID Filial Departamento"
+              placeholderTextColor="#888"
+              value={idFilialDepartamento}
+              onChangeText={setIdFilialDepartamento}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="Modelo"
+              placeholderTextColor="#888"
+              value={modelo}
+              onChangeText={setModelo}
+            />
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="Placa"
+              placeholderTextColor="#888"
+              value={placa}
+              onChangeText={setPlaca}
+              autoCapitalize="characters"
+            />
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="Km Rodado"
+              placeholderTextColor="#888"
+              value={kmRodado}
+              onChangeText={setKmRodado}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+              placeholder="Status"
+              placeholderTextColor="#888"
+              value={status}
+              onChangeText={setStatus}
+            />
+
+            {/* Botão salvar */}
+            <TouchableOpacity
+              style={[styles.button, { borderColor: theme.primary }]}
+              onPress={handleSave}
+            >
+              <Text style={{ color: theme.text }}>
+                {editId ? 'Atualizar' : 'Adicionar'}
+              </Text>
+            </TouchableOpacity>
+
+            {loading && (
+              <ActivityIndicator
+                size="large"
+                color={theme.primary}
+                style={{ marginTop: 20 }}
+              />
+            )}
+          </>
         }
-
-        if (!validarPlaca(placa)) {
-            Alert.alert(
-                'Erro',
-                'A placa deve estar no formato correto (ex: ABC1234 ou ABC1D23).'
-            );
-            return;
+        ListFooterComponent={
+          <TouchableOpacity
+            style={[styles.backButton, { borderColor: theme.primary }]}
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Ionicons name="arrow-back-outline" size={20} color={theme.text} />
+            <Text style={{ color: theme.text, marginLeft: 6 }}>
+              Voltar ao Home
+            </Text>
+          </TouchableOpacity>
         }
+      />
 
-        const newMoto: Moto = {
-            id: Date.now().toString(),
-            modelo,
-            filial,
-            departamento,
-            placa: placa.toUpperCase(),
-            status,
-            kmRodado,
-            cordX,
-            cordY,
-        };
-
-        const updatedMotos = [...motos, newMoto];
-        setMotos(updatedMotos);
-        await AsyncStorage.setItem('motos', JSON.stringify(updatedMotos));
-
-        setModelo('Mottu Pop');
-        setFilial('');
-        setDepartamento('');
-        setPlaca('');
-        setStatus('');
-        setKmRodado(0);
-        setCordX('');
-        setCordY('');
-        Alert.alert('Sucesso', 'Moto adicionada com sucesso!');
-    };
-
-    const handleDelete = async (id: string) => {
-        const updatedMotos = motos.filter((moto) => moto.id !== id);
-        setMotos(updatedMotos);
-        await AsyncStorage.setItem('motos', JSON.stringify(updatedMotos));
-    };
-
-    return (
-        <View style={styles.container}>
-            <Header />
-
-            <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-                <Text style={styles.title}>Cadastro de Motos</Text>
-
-                {/* Modelo com Modal */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="construct" size={20} color="#00FF88" />
-                    <TouchableOpacity
-                        style={styles.input}
-                        onPress={() => setShowModeloModal(true)}
-                    >
-                        <Text style={{ color: '#fff', fontSize: 16 }}>
-                            {modelo || 'Selecione o modelo'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Modal Modelo */}
-                <Modal
-                    visible={showModeloModal}
-                    animationType="slide"
-                    transparent
-                    onRequestClose={() => setShowModeloModal(false)}
-                >
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
-                            {modelosDisponiveis.map((item) => (
-                                <TouchableOpacity
-                                    key={item}
-                                    style={styles.modalItem}
-                                    onPress={() => {
-                                        setModelo(item);
-                                        setShowModeloModal(false);
-                                    }}
-                                >
-                                    <Text style={{ color: '#fff', fontSize: 16 }}>{item}</Text>
-                                </TouchableOpacity>
-                            ))}
-                            <TouchableOpacity onPress={() => setShowModeloModal(false)}>
-                                <Text
-                                    style={{ color: '#FF5C5C', textAlign: 'center', marginTop: 10 }}
-                                >
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-
-                {/* Filial */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="business" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Filial"
-                        placeholderTextColor="#aaa"
-                        value={filial}
-                        onChangeText={setFilial}
-                    />
-                </View>
-
-                {/* Departamento */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="people" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Departamento"
-                        placeholderTextColor="#aaa"
-                        value={departamento}
-                        onChangeText={setDepartamento}
-                    />
-                </View>
-
-                {/* Placa */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="list" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Placa (ABC1234)"
-                        placeholderTextColor="#aaa"
-                        autoCapitalize="characters"
-                        value={placa}
-                        onChangeText={setPlaca}
-                    />
-                </View>
-
-                {/* Status com Modal */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="shield-checkmark" size={20} color="#00FF88" />
-                    <TouchableOpacity
-                        style={styles.input}
-                        onPress={() => setShowStatusModal(true)}
-                    >
-                        <Text style={{ color: '#fff', fontSize: 16 }}>
-                            {status || 'Selecione o status'}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Modal Status */}
-                <Modal
-                    visible={showStatusModal}
-                    animationType="slide"
-                    transparent
-                    onRequestClose={() => setShowStatusModal(false)}
-                >
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContent}>
-                            {statusDisponiveis.map((item) => (
-                                <TouchableOpacity
-                                    key={item}
-                                    style={styles.modalItem}
-                                    onPress={() => {
-                                        setStatus(item);
-                                        setShowStatusModal(false);
-                                    }}
-                                >
-                                    <Text style={{ color: '#fff', fontSize: 16 }}>{item}</Text>
-                                </TouchableOpacity>
-                            ))}
-                            <TouchableOpacity onPress={() => setShowStatusModal(false)}>
-                                <Text
-                                    style={{ color: '#FF5C5C', textAlign: 'center', marginTop: 10 }}
-                                >
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-
-                {/* Km Rodado */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="speedometer" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Km Rodado"
-                        placeholderTextColor="#aaa"
-                        keyboardType="numeric"
-                        value={kmRodado.toString()}
-                        onChangeText={(text) => setKmRodado(Number(text))}
-                    />
-                </View>
-
-                {/* Coordenadas X */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="location" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Coordenadas X"
-                        placeholderTextColor="#aaa"
-                        keyboardType="numeric"
-                        value={cordX.toString()}
-                        onChangeText={setCordX}
-                    />
-                </View>
-
-                {/* Coordenadas Y */}
-                <View style={styles.inputContainer}>
-                    <Ionicons name="location" size={20} color="#00FF88" />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Coordenadas Y"
-                        placeholderTextColor="#aaa"
-                        keyboardType="numeric"
-                        value={cordY.toString()}
-                        onChangeText={setCordY}
-                    />
-                </View>
-
-                <TouchableOpacity style={styles.button} onPress={handleAddMoto}>
-                    <Text style={styles.buttonText}>Adicionar Moto</Text>
-                </TouchableOpacity>
-
-
-
-                {motos.length > 0 && (
-                    <Text style={styles.sectionTitle}>Motos Cadastradas:</Text>
-                )}
-
-                <FlatList
-                    data={motos}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View style={styles.motoItem}>
-                            <View style={{ flex: 1 }}>
-                                <Text style={styles.motoText}>
-                                    <Ionicons name="construct" size={16} color="#00FF88" /> Modelo: {item.modelo}
-                                </Text>
-                                <Text style={styles.motoText}>
-                                    <Ionicons name="list" size={16} color="#00FF88" /> Placa: {item.placa}
-                                </Text>
-                                <Text style={styles.motoText}>
-                                    <Ionicons name="shield-checkmark" size={16} color="#00FF88" /> Status: {item.status}
-                                </Text>
-                                <Text style={styles.motoText}>
-                                    <Ionicons name="speedometer" size={16} color="#00FF88" /> Km Rodado: {item.kmRodado}
-                                </Text>
-                                <Text style={styles.motoText}>
-                                    <Ionicons name="location" size={16} color="#00FF88" /> Coordenadas: ({item.cordX}, {item.cordY})
-                                </Text>
-                            </View>
-                            <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                                <Ionicons name="trash-bin-outline" size={24} color="#FF4D4D" />
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                />
-
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name="arrow-back-outline" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Voltar ao Home</Text>
-                </TouchableOpacity>
-            </ScrollView>
-            <Footer />
-        </View>
-    );
+      <Footer />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#000',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#00FF88',
-        marginTop: 20,
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    label: {
-        color: '#00FF88',
-        fontWeight: '600',
-        marginLeft: 10,
-        marginBottom: 5,
-        marginTop: 15,
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: '#00FF88',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        marginHorizontal: 15,
-        marginVertical: 7,
-        height: 40,
-    },
-    input: {
-        flex: 1,
-        color: '#fff',
-
-        fontSize: 16,
-        paddingLeft: 10,
-    },
-    button: {
-        backgroundColor: '#222',
-        paddingVertical: 15,
-        borderColor: '#00FF88',
-        borderWidth: 1,
-        borderRadius: 10,
-        marginBottom: 20,
-        alignItems: 'center',
-        marginTop: 10,
-        marginHorizontal: 15,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-    sectionTitle: {
-        color: '#00FF88',
-        fontSize: 22,
-        fontWeight: '600',
-        marginLeft: 20,
-        marginTop: 20,
-        marginBottom: 10,
-    },
-    motoItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#111',
-        padding: 15,
-        marginHorizontal: 20,
-        marginVertical: 6,
-        borderRadius: 8,
-    },
-    motoText: {
-        color: '#fff',
-        fontSize: 16,
-        flex: 1,
-    },
-    deleteButton: {
-        backgroundColor: '#FF5C5C',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 6,
-    },
-    modalOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.7)',
-    },
-    modalContent: {
-        width: '80%',
-        backgroundColor: '#1c1c1e',
-        borderRadius: 10,
-        padding: 20,
-        borderWidth: 1,
-        borderColor: '#00FF88',
-    },
-    modalItem: {
-        paddingVertical: 12,
-        borderBottomColor: '#333',
-        borderBottomWidth: 1,
-    },
-    backButton: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#1c1c1e',
-        borderRadius: 12,
-        paddingVertical: 14,
-        borderWidth: 1,
-        borderColor: '#00FF88',
-        marginTop: 20,
-        marginBottom: 20,
-        marginHorizontal: 15,
-    },
+  container: { flex: 1 },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  input: {
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 12,
+    paddingLeft: 12,
+    marginHorizontal: 15,
+  },
+  button: {
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+    marginTop: 10,
+    marginHorizontal: 15,
+  },
+  motoItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: 15,
+    marginHorizontal: 15,
+    marginVertical: 6,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  motoText: {
+    fontSize: 15,
+    marginBottom: 4,
+    flexShrink: 1, // evita estouro da largura
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginLeft: 10,
+  },
+  backButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    paddingVertical: 14,
+    borderWidth: 1,
+    marginTop: 20,
+    marginBottom: 20,
+    marginHorizontal: 15,
+  },
 });
