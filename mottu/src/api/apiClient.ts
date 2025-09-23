@@ -10,7 +10,7 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptor para incluir o token automaticamente
+
 apiClient.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem("token"); 
