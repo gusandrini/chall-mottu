@@ -69,8 +69,8 @@ Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dis
 
 Use as credenciais abaixo para acessar o sistema:
 
-- **Email:** `teste@teste.com`  
-- **Senha:** `000000`
+- **Email:** `carlos.silva@empresa.com`  
+- **Senha:** `123456`
 
 ---
 
@@ -94,9 +94,10 @@ Antes de rodar o projeto, verifique se você tem as seguintes ferramentas instal
 
 ---
 
-## 📎 Repositório
+## 📎 Repositórios
 
-🔗 [https://github.com/gusandrini/chall-mottu](https://github.com/gusandrini/chall-mottu)
+🔗 MOBILE   -> [https://github.com/gusandrini/chall-mottu](https://github.com/gusandrini/chall-mottu)
+🔗 API JAVA -> [https://github.com/gusandrini/mottu-java](https://github.com/gusandrini/mottu-java)
 
 ---
 
