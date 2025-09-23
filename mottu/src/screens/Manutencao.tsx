@@ -1,248 +1,270 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
-import { Ionicons } from 'react-native-vector-icons'; // Importando ícones
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-type Manutencao = {
-    id: string;
-    motoId: string;
-    status: string;
-    dataEntrada: string;
-    dataSaida: string | null;
-};
+import {
+  getManutencoes,
+  addManutencao,
+  updateManutencao,
+  deleteManutencao,
+} from '../api/manutencao';
 
-export default function Manutencao({ navigation }: any) {
-    const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
-    const [motoId, setMotoId] = useState('');
-    const [status, setStatus] = useState('');
-    const [dataEntrada, setDataEntrada] = useState('');
-    const [dataSaida, setDataSaida] = useState('');
+import { Manutencao } from '../models/manutencao';
+import { useTheme } from '../context/ThemeContext';
 
-    useEffect(() => {
-        const loadData = async () => {
-            const storedManutencoes = await AsyncStorage.getItem('manutencoes');
-            if (storedManutencoes) {
-                setManutencoes(JSON.parse(storedManutencoes));
-            }
-        };
-        loadData();
-    }, []);
+export default function ManutencaoScreen({ navigation }: any) {
+  const { theme } = useTheme();
 
-    const isValidId = (id: string) => {
-        const regex = /^[0-9]+$/; // Verifica se o ID contém apenas números
-        return regex.test(id);
+  const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
+  const [descricao, setDescricao] = useState('');
+  const [dataEntrada, setDataEntrada] = useState('');
+  const [dataSaida, setDataSaida] = useState('');
+  const [idMoto, setIdMoto] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+
+  // 🔹 Buscar dados
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await getManutencoes();
+      setManutencoes(response.data || []);
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar as manutenções.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // 🔹 Salvar ou atualizar
+  const handleSave = async () => {
+    if (!descricao || !dataEntrada || !idMoto) {
+      Alert.alert('Erro', 'Preencha os campos obrigatórios.');
+      return;
+    }
+
+    const payload: Manutencao = {
+      idManutencao: editId ?? 0,
+      moto: { idMoto: parseInt(idMoto, 10) },
+      dsManutencao: descricao,
+      dtEntrada: dataEntrada,
+      dtSaida: dataSaida || undefined,
     };
 
-    const isValidDate = (date: string) => {
-        const parsedDate = Date.parse(date);
-        return !isNaN(parsedDate); // Verifica se a data é válida
-    };
+    try {
+      if (editId) {
+        await updateManutencao(payload);
+        Alert.alert('Sucesso', 'Manutenção atualizada!');
+      } else {
+        await addManutencao(payload);
+        Alert.alert('Sucesso', 'Manutenção criada!');
+      }
+      fetchData();
+      resetForm();
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível salvar.');
+    }
+  };
 
-    const handleAddManutencao = async () => {
-        if (!isValidId(motoId)) {
-            Alert.alert("Erro", "ID da moto deve ser um número válido.");
-            return;
-        }
-        if (!isValidDate(dataEntrada)) {
-            Alert.alert("Erro", "Data de entrada deve ser uma data válida.");
-            return;
-        }
-        if (dataSaida && !isValidDate(dataSaida)) {
-            Alert.alert("Erro", "Data de saída deve ser uma data válida.");
-            return;
-        }
+  // 🔹 Excluir
+  const handleDelete = (idManutencao: number) => {
+    Alert.alert('Confirmação', 'Deseja realmente excluir?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await deleteManutencao(idManutencao);
+            Alert.alert('Sucesso', 'Manutenção excluída!');
+            fetchData();
+          } catch {
+            Alert.alert('Erro', 'Não foi possível excluir.');
+          }
+        },
+      },
+    ]);
+  };
 
-        const newManutencao = {
-            id: Date.now().toString(),
-            motoId,
-            status,
-            dataEntrada,
-            dataSaida,
-        };
-        const updatedManutencoes = [...manutencoes, newManutencao];
-        setManutencoes(updatedManutencoes);
-        await AsyncStorage.setItem('manutencoes', JSON.stringify(updatedManutencoes));
-        setMotoId('');
-        setStatus('');
-        setDataEntrada('');
-        setDataSaida('');
-    };
+  // 🔹 Editar
+  const handleEdit = (item: Manutencao) => {
+    setEditId(item.idManutencao);
+    setDescricao(item.dsManutencao);
+    setDataEntrada(item.dtEntrada);
+    setDataSaida(item.dtSaida ?? '');
+    setIdMoto(item.moto?.idMoto?.toString() ?? '');
+  };
 
-    const handleDeleteManutencao = async (id: string) => {
-        const updatedManutencoes = manutencoes.filter((item) => item.id !== id);
-        setManutencoes(updatedManutencoes);
-        await AsyncStorage.setItem('manutencoes', JSON.stringify(updatedManutencoes));
-    };
+  const resetForm = () => {
+    setDescricao('');
+    setDataEntrada('');
+    setDataSaida('');
+    setIdMoto('');
+    setEditId(null);
+  };
 
-    const renderItem = ({ item }: { item: Manutencao }) => (
-        <View style={styles.item}>
-            <View style={styles.itemDetails}>
-                <Text style={styles.itemText}>ID da Moto:</Text>
-                <Text style={styles.itemValue}>{item.motoId}</Text>
-            </View>
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+      <Header />
 
-            <View style={styles.itemDetails}>
-                <Text style={styles.itemText}>Status:</Text>
-                <Text style={styles.itemValue}>{item.status}</Text>
-            </View>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Formulário */}
+        <Text style={[styles.title, { color: theme.text }]}>
+          {editId ? 'Editar Manutenção' : 'Adicionar Manutenção'}
+        </Text>
 
-            <View style={styles.itemDetails}>
-                <Text style={styles.itemText}>Data de Entrada:</Text>
-                <Text style={styles.itemValue}>{item.dataEntrada}</Text>
-            </View>
+        <TextInput
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+          placeholder="ID da Moto"
+          value={idMoto}
+          onChangeText={setIdMoto}
+          keyboardType="numeric"
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+          placeholder="Descrição"
+          value={descricao}
+          onChangeText={setDescricao}
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+          placeholder="Data Entrada (YYYY-MM-DD)"
+          value={dataEntrada}
+          onChangeText={setDataEntrada}
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+          placeholder="Data Saída (YYYY-MM-DD)"
+          value={dataSaida}
+          onChangeText={setDataSaida}
+          placeholderTextColor="#888"
+        />
 
-            <View style={styles.itemDetails}>
-                <Text style={styles.itemText}>Data de Saída:</Text>
-                <Text style={styles.itemValue}>{item.dataSaida || 'N/A'}</Text>
-            </View>
+        <TouchableOpacity
+          style={[styles.button, { borderColor: theme.primary }]}
+          onPress={handleSave}
+        >
+          <Text style={[styles.buttonText, { color: theme.text }]}>
+            {editId ? 'Atualizar' : 'Adicionar'}
+          </Text>
+        </TouchableOpacity>
 
-            <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => handleDeleteManutencao(item.id)}
+        {loading ? (
+          <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 20 }} />
+        ) : (
+          manutencoes.map((item) => (
+            <View
+              key={item.idManutencao}
+              style={[styles.item, { backgroundColor: theme.background, borderColor: theme.primary }]}
             >
-                <Ionicons name="trash-bin" size={24} color="#FF4D4D" />
-            </TouchableOpacity>
-        </View>
-    );
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.itemValue, { color: theme.primary }]}>
+                  {item.dsManutencao}
+                </Text>
+                <Text style={[styles.itemText, { color: theme.text }]}>
+                  Moto: {item.moto?.idMoto}
+                </Text>
+                <Text style={[styles.itemText, { color: theme.text }]}>
+                  Entrada: {item.dtEntrada}
+                </Text>
+                <Text style={[styles.itemText, { color: theme.text }]}>
+                  Saída: {item.dtSaida ?? 'Em aberto'}
+                </Text>
+              </View>
 
-    return (
-        <SafeAreaView style={styles.safeArea}>
-            <Header />
-            <View style={styles.container}>
-                <Text style={styles.title}>Adicionar Manutenção</Text>
-
-                <TextInput
-                    style={styles.input}
-                    placeholder="ID da Moto"
-                    value={motoId}
-                    onChangeText={setMotoId}
-                    placeholderTextColor="#888"
-                    keyboardType="numeric"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Status"
-                    value={status}
-                    onChangeText={setStatus}
-                    placeholderTextColor="#888"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Data de Entrada"
-                    value={dataEntrada}
-                    onChangeText={setDataEntrada}
-                    placeholderTextColor="#888"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Data de Saída (opcional)"
-                    value={dataSaida}
-                    onChangeText={setDataSaida}
-                    placeholderTextColor="#888"
-                />
-
-                <TouchableOpacity style={styles.button} onPress={handleAddManutencao}>
-                    <Text style={styles.buttonText}>Adicionar Manutenção</Text>
+              <View style={styles.actions}>
+                <TouchableOpacity onPress={() => handleEdit(item)}>
+                  <Ionicons name="create-outline" size={22} color={theme.primary} />
                 </TouchableOpacity>
-
-                <FlatList
-                    data={manutencoes}
-                    keyExtractor={(item) => item.id}
-                    renderItem={renderItem}
-                />
-
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name="arrow-back-outline" size={20} color="#fff" />
-                    <Text style={styles.buttonText}>Voltar ao Home</Text>
+                <TouchableOpacity onPress={() => handleDelete(item.idManutencao)}>
+                  <Ionicons name="trash-bin" size={22} color="#FF4D4D" />
                 </TouchableOpacity>
+              </View>
             </View>
-            <Footer />
-        </SafeAreaView>
-    );
+          ))
+        )}
+
+        {/* Botão voltar */}
+        <TouchableOpacity
+          style={[styles.backButton, { borderColor: theme.primary }]}
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Ionicons name="arrow-back-outline" size={20} color={theme.text} />
+          <Text style={[styles.buttonText, { color: theme.text }]}>Voltar ao Home</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <Footer />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#000'
-    },
-    container: {
-        flex: 1,
-        padding: 32,
-        flexGrow: 1, // Garantir que o conteúdo ocupe o espaço disponível
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#fff',
-        marginBottom: 40,
-        textAlign: 'center',
-    },
-    input: {
-        height: 50,
-        borderColor:'#00FF88',
-        borderWidth: 1,
-        borderRadius: 10,
-        marginBottom: 20,
-        paddingLeft: 16,
-        color: '#fff',
-        fontSize: 16,
-    },
-    button: {
-        backgroundColor: '#222',
-        paddingVertical: 15,
-        borderColor:'#00FF88',
-        borderWidth: 1,
-        borderRadius: 10,
-        marginBottom: 20,
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-    item: {
-        padding: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#888',
-        marginBottom: 12,
-        backgroundColor: '#222',
-        borderColor:'#00FF88',
-        borderWidth: 1,
-        borderRadius: 10,
-        position: 'relative', 
-        marginTop: 30,
-    },
-    itemDetails: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 8,
-    },
-    itemText: {
-        color: '#fff',
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    itemValue: {
-        fontWeight: 'bold',
-        color: '#00FF88',
-    },
-    deleteButton: {
-        alignItems: 'center'
-    },
-    backButton: {
+  safeArea: { flex: 1 },
+  scrollContent: { padding: 20, paddingBottom: 40 },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    fontSize: 15,
+  },
+  button: {
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: { fontSize: 16, fontWeight: '600' },
+  item: {
+    padding: 16,
+    marginVertical: 6,
+    borderWidth: 1,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  itemText: { fontSize: 14, marginBottom: 2, flexShrink: 1 },
+  itemValue: { fontWeight: 'bold', fontSize: 15, marginBottom: 4 },
+  actions: { flexDirection: 'row', gap: 12, marginLeft: 10 },
+  backButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1c1c1e',
     borderRadius: 12,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: '#00FF88',
+    marginTop: 20,
   },
 });
