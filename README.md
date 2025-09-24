@@ -53,15 +53,10 @@ cd mottu
 ```bash
 cd mottu
 npm i
-npm start
+npm expo start
 ```
 
-Ou, se quiser abrir diretamente no celular:
-```bash
-npx expo start --tunnel
-```
-
-Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dispositivo.
+Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dispositivo (Obs: Em IOS é necessário estar conectado na mesma internet).
 
 ---
 
@@ -88,9 +83,11 @@ Antes de rodar o projeto, verifique se você tem as seguintes ferramentas instal
 
 ## 📝 Observações Importantes
 
-- Toda movimentação de motos é **registrada automaticamente** com **data**, **hora** e **localização**.  
-- O backend está preparado para futuras integrações com outras tecnologias como sensores IoT.  
-- A comunicação entre os módulos é feita via **API REST**, garantindo escalabilidade e segurança.  
+- Toda movimentação de motos é **registrada automaticamente** com **data, hora e localização**.  
+- O backend já está preparado para futuras integrações com **tecnologias IoT** (sensores, rastreamento, etc.).  
+- A comunicação entre os módulos é feita via **API REST**, garantindo **escalabilidade, segurança e facilidade de manutenção**.  
+- A aplicação foi **deployada em ambiente na nuvem**. No plano gratuito pode ocorrer uma **demora inicial** para o servidor acordar e responder às requisições.  
+
 
 ---
 
