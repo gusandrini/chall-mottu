@@ -1,7 +1,7 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = "http://172.20.10.2:8080";
+const API_BASE_URL = "https://mottu-java.onrender.com";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
