@@ -36,8 +36,12 @@ export default function Login({ navigation }: any) {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <View style={styles.container}>
         <Text style={[styles.title, { color: theme.primary }]}>Bem-vindo</Text>
+        <Text style={[styles.subtitle, { color: theme.text }]}>
+          Faça login para continuar
+        </Text>
 
-        <View style={[styles.inputContainer, { borderColor: theme.primary, backgroundColor: theme.background }]}>
+      
+        <View style={[styles.inputContainer, { borderColor: theme.primary }]}>
           <Ionicons name="mail-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
             style={[styles.input, { color: theme.text }]}
@@ -51,7 +55,8 @@ export default function Login({ navigation }: any) {
           />
         </View>
 
-        <View style={[styles.inputContainer, { borderColor: theme.primary, backgroundColor: theme.background }]}>
+
+        <View style={[styles.inputContainer, { borderColor: theme.primary }]}>
           <Ionicons name="lock-closed-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
             style={[styles.input, { color: theme.text }]}
@@ -63,21 +68,29 @@ export default function Login({ navigation }: any) {
           />
         </View>
 
+        {/* Botão Entrar */}
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={handleLogin}
+          activeOpacity={0.85}
         >
-          <Ionicons name="log-in-outline" size={20} color="#fff" />
+          <Ionicons name="log-in-outline" size={22} color="#fff" />
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {/* 🔹 Botão para alternar tema */}
+        {/* Botão alternar tema */}
         <TouchableOpacity
-          style={[styles.themeButton, { backgroundColor: theme.primary }]}
+          style={styles.themeButton}
           onPress={toggleTheme}
+          activeOpacity={0.7}
         >
-          <Text style={{ color: '#fff', fontWeight: '600' }}>
-            {theme.background === '#000' ? '🌞 Modo Claro' : '🌙 Modo Escuro'}
+          <Ionicons
+            name={theme.background === '#000' ? 'sunny-outline' : 'moon-outline'}
+            size={18}
+            color={theme.text}
+          />
+          <Text style={[styles.themeText, { color: theme.text }]}>
+            {theme.background === '#000' ? 'Modo Claro' : 'Modo Escuro'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -87,23 +100,37 @@ export default function Login({ navigation }: any) {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  container: { flex: 1, justifyContent: 'center', padding: 32 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 32,
+  },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
     textAlign: 'center',
     marginBottom: 40,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 10,
+    borderWidth: 1.2,
+    borderRadius: 12,
     paddingHorizontal: 12,
-    marginBottom: 20,
+    marginBottom: 18,
+    height: 52,
   },
   icon: { marginRight: 8 },
-  input: { flex: 1, height: 50, fontSize: 16 },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    height: '100%',
+  },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -111,13 +138,26 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     marginTop: 10,
+    elevation: 2,
   },
-  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600', marginLeft: 8 },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
   themeButton: {
-    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
     alignSelf: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    marginTop: 28,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+  },
+  themeText: {
+    marginLeft: 6,
+    fontSize: 14,
   },
 });
