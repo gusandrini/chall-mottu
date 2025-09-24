@@ -97,7 +97,11 @@ Antes de rodar o projeto, verifique se você tem as seguintes ferramentas instal
 ## 📎 Repositórios
 
 🔗 MOBILE   -> [https://github.com/gusandrini/chall-mottu](https://github.com/gusandrini/chall-mottu)
+
 🔗 API JAVA -> [https://github.com/gusandrini/mottu-java](https://github.com/gusandrini/mottu-java)
+
+## 📎 Deploy API
+🔗 [https://mottu-java.onrender.com/h2-console](https://mottu-java.onrender.com/h2-console)
 
 ---
 
