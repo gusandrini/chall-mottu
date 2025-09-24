@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,20 +18,30 @@ import { useTheme } from '../context/ThemeContext';
 export default function Login({ navigation }: any) {
   const { login } = useSession();
   const { theme, toggleTheme } = useTheme();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); 
 
   async function handleLogin() {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Atenção', 'Preencha e-mail e senha.');
       return;
     }
-    const ok = await login(email, password);
-    if (!ok) {
-      Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
-      return;
+
+    try {
+      setLoading(true); 
+      const ok = await login(email, password);
+      if (!ok) {
+        Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
+        return;
+      }
+      navigation.replace('Home');
+    } catch (err) {
+      Alert.alert('Erro', 'Falha ao conectar com o servidor.');
+    } finally {
+      setLoading(false); 
     }
-    navigation.replace('Home');
   }
 
   return (
@@ -40,7 +52,7 @@ export default function Login({ navigation }: any) {
           Faça login para continuar
         </Text>
 
-      
+
         <View style={[styles.inputContainer, { borderColor: theme.primary }]}>
           <Ionicons name="mail-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
@@ -55,7 +67,6 @@ export default function Login({ navigation }: any) {
           />
         </View>
 
-
         <View style={[styles.inputContainer, { borderColor: theme.primary }]}>
           <Ionicons name="lock-closed-outline" size={20} color={theme.primary} style={styles.icon} />
           <TextInput
@@ -68,7 +79,6 @@ export default function Login({ navigation }: any) {
           />
         </View>
 
-        {/* Botão Entrar */}
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={handleLogin}
@@ -78,7 +88,7 @@ export default function Login({ navigation }: any) {
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {/* Botão alternar tema */}
+        {/* alternar tema */}
         <TouchableOpacity
           style={styles.themeButton}
           onPress={toggleTheme}
@@ -94,6 +104,16 @@ export default function Login({ navigation }: any) {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* carregamento */}
+      <Modal transparent visible={loading} animationType="fade">
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={[styles.loadingText, { color: theme.text }]}>
+            Conectando com o servidor...
+          </Text>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -159,5 +179,15 @@ const styles = StyleSheet.create({
   themeText: {
     marginLeft: 6,
     fontSize: 14,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
   },
 });
