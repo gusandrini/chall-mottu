@@ -52,17 +52,7 @@ const Home = () => {
     <View style={[styles.screen, { backgroundColor: theme.background }]}>
       <Header />
 
-      {/* tema */}
-      <TouchableOpacity style={styles.themeButton} onPress={toggleTheme}>
-        <Ionicons
-          name={theme.background === '#000' ? 'sunny-outline' : 'moon-outline'}
-          size={18}
-          color={theme.text}
-        />
-        <Text style={[styles.themeText, { color: theme.text }]}>
-          {theme.background === '#000' ? 'Modo Claro' : 'Modo Escuro'}
-        </Text>
-      </TouchableOpacity>
+      
 
       {/* boas-vindas */}
       <Modal visible={showWelcome} animationType="fade" transparent>
@@ -125,6 +115,19 @@ const Home = () => {
               </View>
             </TouchableOpacity>
           ))}
+
+          {/* tema */}
+      <TouchableOpacity style={styles.themeButton} onPress={toggleTheme}>
+        <Ionicons
+          name={theme.background === '#000' ? 'sunny-outline' : 'moon-outline'}
+          size={18}
+          color={theme.text}
+        />
+        <Text style={[styles.themeText, { color: theme.text }]}>
+          {theme.background === '#000' ? 'Modo Claro' : 'Modo Escuro'}
+        </Text>
+      </TouchableOpacity>
+      
         </View>
       </ScrollView>
 
@@ -145,15 +148,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   themeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    margin: 12,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-  },
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center', 
+  alignSelf: 'center',      
+  paddingVertical: 8,
+  paddingHorizontal: 16,
+  borderRadius: 20,
+  marginTop: 20,
+  backgroundColor: 'rgba(0,0,0,0.05)',
+},
   themeText: {
     marginLeft: 6,
     fontSize: 14,
