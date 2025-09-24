@@ -182,12 +182,15 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: '#757575',
     justifyContent: 'center',
     alignItems: 'center',
   },
   loadingText: {
-    marginTop: 12,
-    fontSize: 16,
-  },
+  marginTop: 18,
+  fontSize: 20,        
+  fontWeight: '700',   
+  textAlign: 'center', 
+  paddingHorizontal: 20,
+},
 });
