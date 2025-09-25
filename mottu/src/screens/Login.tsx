@@ -21,7 +21,7 @@ export default function Login({ navigation }: any) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
     if (!email.trim() || !password.trim()) {
@@ -30,7 +30,7 @@ export default function Login({ navigation }: any) {
     }
 
     try {
-      setLoading(true); 
+      setLoading(true);
       const ok = await login(email, password);
       if (!ok) {
         Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
@@ -40,7 +40,7 @@ export default function Login({ navigation }: any) {
     } catch (err) {
       Alert.alert('Erro', 'Falha ao conectar com o servidor.');
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 
@@ -51,7 +51,6 @@ export default function Login({ navigation }: any) {
         <Text style={[styles.subtitle, { color: theme.text }]}>
           Faça login para continuar
         </Text>
-
 
         <View style={[styles.inputContainer, { borderColor: theme.primary }]}>
           <Ionicons name="mail-outline" size={20} color={theme.primary} style={styles.icon} />
@@ -86,6 +85,16 @@ export default function Login({ navigation }: any) {
         >
           <Ionicons name="log-in-outline" size={22} color="#fff" />
           <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+
+        {/* 👉 botão para ir ao cadastro */}
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={() => navigation.navigate('CadastroFuncionario')}
+        >
+          <Text style={[styles.registerText, { color: theme.primary }]}>
+            Não tem conta? Criar agora
+          </Text>
         </TouchableOpacity>
 
         {/* alternar tema */}
@@ -166,6 +175,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
+  registerButton: {
+    marginTop: 18,
+    alignItems: 'center',
+  },
+  registerText: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
   themeButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -187,10 +204,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-  marginTop: 18,
-  fontSize: 20,        
-  fontWeight: '700',   
-  textAlign: 'center', 
-  paddingHorizontal: 20,
-},
+    marginTop: 18,
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
 });

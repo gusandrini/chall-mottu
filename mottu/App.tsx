@@ -16,6 +16,7 @@ import Funcionario from './src/screens/Funcionario';
 import Manutencao from './src/screens/Manutencao';
 import Moto from './src/screens/Moto';
 import SobreNos from './src/screens/SobreNos';
+import CadastroFuncionario from './src/screens/CadastroFuncionario';
 
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import { SessionProvider } from './src/services/SessionProvider'; 
@@ -46,6 +47,7 @@ function AppNavigator() {
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="CadastroFuncionario" component={CadastroFuncionario} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Cliente" component={Cliente} />
         <Stack.Screen name="Funcionario" component={Funcionario} />
