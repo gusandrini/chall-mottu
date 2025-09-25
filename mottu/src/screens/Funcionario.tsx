@@ -28,7 +28,7 @@ export default function FuncionarioScreen() {
 
   const fetchFuncionario = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId'); 
+      const userId = await AsyncStorage.getItem('userId');
       if (!userId) {
         Alert.alert('Erro', 'Usuário não autenticado!');
         navigation.reset({
@@ -52,11 +52,18 @@ export default function FuncionarioScreen() {
   }, []);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('userId');
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' as never }],
-    });
+    try {
+      
+      await AsyncStorage.multiRemove(['userId', 'token']);
+      setFuncionario(null);
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' as never }],
+      });
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível sair da conta.');
+    }
   };
 
   return (
@@ -161,9 +168,7 @@ function Item({
         style={styles.itemIcon}
       />
       <Text style={[styles.itemText, { color: theme.text }]}>
-        <Text style={[styles.itemLabel, { color: theme.primary }]}>
-          {label}:
-        </Text>{' '}
+        <Text style={[styles.itemLabel, { color: theme.primary }]}>{label}:</Text>{' '}
         {value}
       </Text>
     </View>
@@ -177,7 +182,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ff3b30', // mantém vermelho fixo
+    backgroundColor: '#ff3b30',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,

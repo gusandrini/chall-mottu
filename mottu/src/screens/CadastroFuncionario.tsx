@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
+  Modal,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,6 +26,7 @@ export default function CadastroFuncionario({ navigation }: any) {
   const [senha, setSenha] = useState("");
   const [cargo, setCargo] = useState("");
   const [idFilial, setIdFilial] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const validarEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -48,11 +51,12 @@ export default function CadastroFuncionario({ navigation }: any) {
     };
 
     try {
+      setLoading(true); 
       await addFuncionario(payload);
       Alert.alert("Sucesso", "Funcionário cadastrado!", [
         {
           text: "OK",
-          onPress: () => navigation.replace("Login"), 
+          onPress: () => navigation.replace("Login"),
         },
       ]);
       setNome("");
@@ -62,9 +66,6 @@ export default function CadastroFuncionario({ navigation }: any) {
       setIdFilial("");
     } catch (error: any) {
       if (error.response) {
-        console.log("Status:", error.response.status);
-        console.log("Data:", error.response.data);
-
         if (error.response.status === 401) {
           Alert.alert(
             "Não autorizado",
@@ -85,12 +86,23 @@ export default function CadastroFuncionario({ navigation }: any) {
       } else {
         Alert.alert("Erro", "Não foi possível conectar ao servidor.");
       }
+    } finally {
+      setLoading(false); 
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      
+      {/* Overlay de carregamento */}
+      <Modal transparent visible={loading}>
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={[styles.loadingText, { color: theme.text }]}>
+            Criando funcionário...
+          </Text>
+        </View>
+      </Modal>
+
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
@@ -149,6 +161,7 @@ export default function CadastroFuncionario({ navigation }: any) {
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
           onPress={handleSave}
+          disabled={loading}
         >
           <Ionicons name="save" size={20} color="#fff" />
           <Text style={styles.buttonText}>Salvar Funcionário</Text>
@@ -189,5 +202,16 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 16,
     marginLeft: 6,
+  },
+  loadingOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
