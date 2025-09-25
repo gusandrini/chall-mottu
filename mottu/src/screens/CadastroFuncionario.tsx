@@ -7,11 +7,12 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
-import { FuncionarioCad } from "../models/funcionarioCad"; 
+import { FuncionarioCad } from "../models/funcionarioCad";
 import { addFuncionario } from "../api/funcionario";
 import { useTheme } from "../context/ThemeContext";
 
@@ -38,17 +39,22 @@ export default function CadastroFuncionario({ navigation }: any) {
     }
 
     const payload: FuncionarioCad = {
-      idFuncionario: 0, 
+      idFuncionario: 0,
       idFilial: idFilial ? Number(idFilial) : 0,
       nome,
       emailCorporativo,
-      senhaHash: senha, 
+      senhaHash: senha,
       cargo,
     };
 
     try {
       await addFuncionario(payload);
-      Alert.alert("Sucesso", "Funcionário cadastrado!");
+      Alert.alert("Sucesso", "Funcionário cadastrado!", [
+        {
+          text: "OK",
+          onPress: () => navigation.replace("Login"), 
+        },
+      ]);
       setNome("");
       setEmailCorporativo("");
       setSenha("");
@@ -84,6 +90,15 @@ export default function CadastroFuncionario({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
+      
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back" size={24} color={theme.text} />
+        <Text style={[styles.backText, { color: theme.text }]}>Voltar</Text>
+      </TouchableOpacity>
+
       <KeyboardAvoidingView
         style={styles.inner}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -165,5 +180,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     marginLeft: 8,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  backText: {
+    fontSize: 16,
+    marginLeft: 6,
   },
 });
