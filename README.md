@@ -88,15 +88,25 @@ Antes de rodar o projeto, verifique se você tem as seguintes ferramentas instal
 ---
 ### 📦 Estrutura de Pastas (mobile)
 mottu/
+
   src/
+  
     api/              # axios + endpoints
+    
     components/       # Header, Footer, Home
+    
     context/          # ThemeContext
+    
     models/           # Tipos TS (Cliente, Moto, etc.)
+    
     screens/          # Telas (Login, Cliente, Moto, Manutencao, etc.)
+    
     services/         # SessionProvider (auth)
+    
     theme/            # Paleta de cores
+    
   App.tsx
+  
   package.json
 
 ---
