@@ -53,6 +53,7 @@ cd mottu
 npm install
 
 npx expo start
+
 Android: pressione "a" | iOS: "i" | Web: "w"
 
 ### Backend usado (Render)
