@@ -1,23 +1,23 @@
 import apiClient from "./apiClient";
-import { Funcionario } from "../models/funcionario";
+import { FuncionarioCad } from "../models/funcionarioCad";
 
 // Criar
-export function addFuncionario(funcionario: Funcionario) {
+export function addFuncionario(funcionario: FuncionarioCad) {
   return apiClient.post("/funcionarios/inserir", funcionario);
 }
 
 // Listar todos
 export function getFuncionarios() {
-  return apiClient.get<Funcionario[]>("/funcionarios/todos");
+  return apiClient.get<FuncionarioCad[]>("/funcionarios/todos");
 }
 
 // Buscar por ID
 export function getFuncionario(id: number) {
-  return apiClient.get<Funcionario>(`/funcionarios/${id}`);
+  return apiClient.get<FuncionarioCad>(`/funcionarios/${id}`);
 }
 
 // Atualizar
-export function updateFuncionario(funcionario: Funcionario) {
+export function updateFuncionario(funcionario: FuncionarioCad) {
   return apiClient.put(
     `/funcionarios/atualizar/${funcionario.idFuncionario}`,
     funcionario

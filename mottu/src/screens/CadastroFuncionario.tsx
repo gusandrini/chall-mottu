@@ -1,15 +1,18 @@
-// src/screens/CadastroFuncionario.tsx
 import React, { useState } from "react";
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { addFuncionario } from "../api/funcionario"; 
+import { Ionicons } from "@expo/vector-icons";
+
+import { FuncionarioCad } from "../models/funcionarioCad"; 
+import { addFuncionario } from "../api/funcionario";
 import { useTheme } from "../context/ThemeContext";
 
 export default function CadastroFuncionario({ navigation }: any) {
@@ -17,111 +20,150 @@ export default function CadastroFuncionario({ navigation }: any) {
 
   const [nome, setNome] = useState("");
   const [emailCorporativo, setEmailCorporativo] = useState("");
-  const [cargo, setCargo] = useState("");
   const [senha, setSenha] = useState("");
-  const [filial, setFilial] = useState(""); // se precisar vincular filial
+  const [cargo, setCargo] = useState("");
+  const [idFilial, setIdFilial] = useState("");
 
-  async function handleCadastro() {
-    if (!nome || !emailCorporativo || !cargo || !senha) {
-      Alert.alert("Atenção", "Preencha todos os campos!");
+  const validarEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const handleSave = async () => {
+    if (!nome || !emailCorporativo || !senha || !cargo) {
+      Alert.alert("Erro", "Preencha todos os campos obrigatórios!");
+      return;
+    }
+    if (!validarEmail(emailCorporativo)) {
+      Alert.alert("Erro", "Digite um e-mail corporativo válido!");
       return;
     }
 
-    try {
-      await addFuncionario({
-        nome,
-        emailCorporativo,
-        cargo,
-        senhaHash: senha, // backend criptografa
-        filial: filial ? { id: Number(filial) } : undefined, // só manda se tiver
-      });
+    const payload: FuncionarioCad = {
+      idFuncionario: 0, 
+      idFilial: idFilial ? Number(idFilial) : 0,
+      nome,
+      emailCorporativo,
+      senhaHash: senha, 
+      cargo,
+    };
 
-      Alert.alert("Sucesso", "Funcionário cadastrado! Faça login.");
-      navigation.replace("Login");
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Erro", "Não foi possível cadastrar funcionário.");
+    try {
+      await addFuncionario(payload);
+      Alert.alert("Sucesso", "Funcionário cadastrado!");
+      setNome("");
+      setEmailCorporativo("");
+      setSenha("");
+      setCargo("");
+      setIdFilial("");
+    } catch (error: any) {
+      if (error.response) {
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
+
+        if (error.response.status === 401) {
+          Alert.alert(
+            "Não autorizado",
+            "Seu token é inválido ou expirou. Faça login novamente."
+          );
+        } else if (error.response.status === 403) {
+          Alert.alert(
+            "Acesso negado",
+            "Você não tem permissão para cadastrar funcionários."
+          );
+        } else {
+          const msg =
+            error.response.data?.message ||
+            error.response.data?.error ||
+            "Erro desconhecido no servidor.";
+          Alert.alert(`Erro ${error.response.status}`, msg);
+        }
+      } else {
+        Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+      }
     }
-  }
+  };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.background }]}
-    >
-      <View style={styles.form}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Cadastro de Funcionário
-        </Text>
-
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.inner}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <Text style={[styles.label, { color: theme.text }]}>Nome</Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Nome"
-          placeholderTextColor="#999"
+          style={[styles.input, { borderColor: theme.primary }]}
           value={nome}
           onChangeText={setNome}
         />
 
+        <Text style={[styles.label, { color: theme.text }]}>
+          Email Corporativo
+        </Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Email corporativo"
-          placeholderTextColor="#999"
+          style={[styles.input, { borderColor: theme.primary }]}
           value={emailCorporativo}
           onChangeText={setEmailCorporativo}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
 
+        <Text style={[styles.label, { color: theme.text }]}>Senha</Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Cargo"
-          placeholderTextColor="#999"
+          style={[styles.input, { borderColor: theme.primary }]}
+          value={senha}
+          onChangeText={setSenha}
+          secureTextEntry
+        />
+
+        <Text style={[styles.label, { color: theme.text }]}>Cargo</Text>
+        <TextInput
+          style={[styles.input, { borderColor: theme.primary }]}
           value={cargo}
           onChangeText={setCargo}
         />
 
+        <Text style={[styles.label, { color: theme.text }]}>
+          ID Filial (opcional)
+        </Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Senha"
-          placeholderTextColor="#999"
-          secureTextEntry
-          value={senha}
-          onChangeText={setSenha}
-        />
-
-        <TextInput
-          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="ID da Filial (opcional)"
-          placeholderTextColor="#999"
-          value={filial}
-          onChangeText={setFilial}
+          style={[styles.input, { borderColor: theme.primary }]}
+          value={idFilial}
+          onChangeText={setIdFilial}
           keyboardType="numeric"
         />
 
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={handleCadastro}
+          onPress={handleSave}
         >
-          <Text style={styles.buttonText}>Cadastrar</Text>
+          <Ionicons name="save" size={20} color="#fff" />
+          <Text style={styles.buttonText}>Salvar Funcionário</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.replace("Login")}>
-          <Text style={{ color: theme.primary, marginTop: 20 }}>
-            Já tem conta? Faça login
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
-  form: { width: "100%", maxWidth: 400 },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  container: { flex: 1, padding: 16 },
+  inner: { flex: 1, justifyContent: "center" },
+  label: { marginTop: 12, fontSize: 16 },
   input: {
     borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 4,
   },
-  button: { padding: 14, borderRadius: 10, alignItems: "center" },
-  buttonText: { color: "#fff", fontWeight: "bold" },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+    padding: 12,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    marginLeft: 8,
+  },
 });
