@@ -49,12 +49,15 @@ cd mottu
 ```
 
 
-### 📱 App Mobile (React Native com Expo)
-```bash
-cd mottu
-npm i
-npm expo start
-```
+### ▶️ Como rodar o mobile
+npm install
+npx expo start
+# Android: pressione "a" | iOS: "i" | Web: "w"
+
+### Backend usado (Render)
+Base URL: https://mottu-java.onrender.com
+Observação: o primeiro acesso pode demorar ~1–2 min (cold start grátis).
+
 
 Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dispositivo (Obs: Em IOS é necessário estar conectado na mesma internet).
 
@@ -78,6 +81,20 @@ Antes de rodar o projeto, verifique se você tem as seguintes ferramentas instal
 - [Maven](https://maven.apache.org)
 - [MySQL ou Oracle DB](https://www.mysql.com/)
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
+
+---
+### 📦 Estrutura de Pastas (mobile)
+mottu/
+  src/
+    api/              # axios + endpoints
+    components/       # Header, Footer, Home
+    context/          # ThemeContext
+    models/           # Tipos TS (Cliente, Moto, etc.)
+    screens/          # Telas (Login, Cliente, Moto, Manutencao, etc.)
+    services/         # SessionProvider (auth)
+    theme/            # Paleta de cores
+  App.tsx
+  package.json
 
 ---
 
