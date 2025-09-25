@@ -51,11 +51,13 @@ cd mottu
 
 ### ▶️ Como rodar o mobile
 npm install
+
 npx expo start
-# Android: pressione "a" | iOS: "i" | Web: "w"
+Android: pressione "a" | iOS: "i" | Web: "w"
 
 ### Backend usado (Render)
 Base URL: https://mottu-java.onrender.com
+
 Observação: o primeiro acesso pode demorar ~1–2 min (cold start grátis).
 
 
