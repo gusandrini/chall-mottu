@@ -17,7 +17,7 @@ import Footer from '../components/Footer';
 
 import { useTheme } from '../context/ThemeContext';
 import { Moto } from '../models/moto';
-import { getMotos, addMoto, updateMoto, deleteMoto } from '../api/moto';
+import { getMotos, addMoto, updateMoto } from '../api/moto';
 
 export default function MotoScreen({ navigation }: any) {
   const { theme } = useTheme();
@@ -82,26 +82,6 @@ export default function MotoScreen({ navigation }: any) {
     }
   };
 
-  // 🔹 Excluir
-  const handleDelete = (idMoto: number) => {
-    Alert.alert('Confirmação', 'Deseja realmente excluir?', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Excluir',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await deleteMoto(idMoto);
-            Alert.alert('Sucesso', 'Moto excluída!');
-            fetchData();
-          } catch {
-            Alert.alert('Erro', 'Não foi possível excluir.');
-          }
-        },
-      },
-    ]);
-  };
-
   // 🔹 Editar
   const handleEdit = (item: Moto) => {
     setEditId(item.idMoto);
@@ -148,9 +128,6 @@ export default function MotoScreen({ navigation }: any) {
       <View style={styles.actions}>
         <TouchableOpacity onPress={() => handleEdit(item)}>
           <Ionicons name="create-outline" size={22} color={theme.primary} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDelete(item.idMoto)}>
-          <Ionicons name="trash-bin-outline" size={22} color="red" />
         </TouchableOpacity>
       </View>
     </View>
@@ -294,7 +271,7 @@ const styles = StyleSheet.create({
   motoText: {
     fontSize: 15,
     marginBottom: 4,
-    flexShrink: 1, // evita estouro da largura
+    flexShrink: 1,
   },
   actions: {
     flexDirection: 'row',
