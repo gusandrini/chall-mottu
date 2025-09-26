@@ -45,7 +45,7 @@ export default function ClienteScreen({ navigation }: any) {
       setClientes(data);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os clientes.');
-      console.log(error, error.response, error.response.data);
+      console.log(error);
     } finally {
       setLoading(false);
     }

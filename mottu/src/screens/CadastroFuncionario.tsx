@@ -51,7 +51,7 @@ export default function CadastroFuncionario({ navigation }: any) {
     };
 
     try {
-      setLoading(true); 
+      setLoading(true);
       await addFuncionario(payload);
       Alert.alert("Sucesso", "Funcionário cadastrado!", [
         {
@@ -87,7 +87,7 @@ export default function CadastroFuncionario({ navigation }: any) {
         Alert.alert("Erro", "Não foi possível conectar ao servidor.");
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -117,45 +117,55 @@ export default function CadastroFuncionario({ navigation }: any) {
       >
         <Text style={[styles.label, { color: theme.text }]}>Nome</Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary }]}
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
           value={nome}
           onChangeText={setNome}
+          placeholder="Digite o nome"
+          placeholderTextColor={theme.text}
         />
 
         <Text style={[styles.label, { color: theme.text }]}>
           Email Corporativo
         </Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary }]}
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
           value={emailCorporativo}
           onChangeText={setEmailCorporativo}
           keyboardType="email-address"
           autoCapitalize="none"
+          placeholder="exemplo@empresa.com"
+          placeholderTextColor={theme.text}
         />
 
         <Text style={[styles.label, { color: theme.text }]}>Senha</Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary }]}
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
+          placeholder="Digite a senha"
+          placeholderTextColor={theme.text}
         />
 
         <Text style={[styles.label, { color: theme.text }]}>Cargo</Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary }]}
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
           value={cargo}
           onChangeText={setCargo}
+          placeholder="Digite o cargo"
+          placeholderTextColor={theme.text}
         />
 
         <Text style={[styles.label, { color: theme.text }]}>
           ID Filial (opcional)
         </Text>
         <TextInput
-          style={[styles.input, { borderColor: theme.primary }]}
+          style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
           value={idFilial}
           onChangeText={setIdFilial}
           keyboardType="numeric"
+          placeholder="Digite o ID da filial"
+          placeholderTextColor={theme.text}
         />
 
         <TouchableOpacity
