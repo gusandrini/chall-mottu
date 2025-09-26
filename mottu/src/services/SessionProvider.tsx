@@ -33,14 +33,20 @@ const SessionProvider = ({ children }: PropsWithChildren) => {
       setUser({ idFuncionario, nome, email: userEmail, cargo });
 
       return true;
-    } catch (error) {
-      console.error("Erro no login:", error);
+    } catch (error: any) {
+      
+      if (error.response && error.response.status === 401) {
+        return false;
+      }
+
+      console.error("Erro inesperado no login:", error);
       return false;
     }
   };
 
   const logout = async () => {
     await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("userId");
     setUser(null);
   };
 

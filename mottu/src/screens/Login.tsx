@@ -1,4 +1,3 @@
-// src/screens/Login.tsx
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios'; 
 import { useSession } from '../services/SessionProvider';
 import { useTheme } from '../context/ThemeContext';
 
@@ -32,13 +32,27 @@ export default function Login({ navigation }: any) {
     try {
       setLoading(true);
       const ok = await login(email, password);
+
       if (!ok) {
         Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
         return;
       }
+
       navigation.replace('Home');
-    } catch (err) {
-      Alert.alert('Erro', 'Falha ao conectar com o servidor.');
+    } catch (err: any) {
+      console.error("Erro no login:", err);
+
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          Alert.alert("Login inválido", "Usuário ou senha incorretos.");
+        } else if (err.response?.status === 500) {
+          Alert.alert("Erro no servidor", "Tente novamente mais tarde.");
+        } else {
+          Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+        }
+      } else {
+        Alert.alert("Erro inesperado", "Verifique sua conexão e tente novamente.");
+      }
     } finally {
       setLoading(false);
     }
@@ -87,7 +101,6 @@ export default function Login({ navigation }: any) {
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {/* 👉 botão para ir ao cadastro */}
         <TouchableOpacity
           style={styles.registerButton}
           onPress={() => navigation.navigate('CadastroFuncionario')}
@@ -97,7 +110,6 @@ export default function Login({ navigation }: any) {
           </Text>
         </TouchableOpacity>
 
-        {/* alternar tema */}
         <TouchableOpacity
           style={styles.themeButton}
           onPress={toggleTheme}
@@ -114,7 +126,7 @@ export default function Login({ navigation }: any) {
         </TouchableOpacity>
       </View>
 
-      {/* carregamento */}
+      
       <Modal transparent visible={loading} animationType="fade">
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.primary} />

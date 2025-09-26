@@ -1,5 +1,5 @@
 export interface Moto {
-  idMoto: number;
+  idMoto: number | undefined;
   cliente: any;                
   filialDepartamento: any;    
   nmPlaca: string;

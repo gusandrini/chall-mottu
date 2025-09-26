@@ -1,4 +1,3 @@
-// src/screens/SobreNos.tsx
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';

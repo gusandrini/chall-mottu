@@ -29,14 +29,14 @@ import { useTheme } from '../context/ThemeContext';
 export default function ClienteScreen({ navigation }: any) {
   const { theme } = useTheme();
   const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [nm_cliente, setNmCliente] = useState('');        // NM_CLIENTE
-  const [nm_email, setNmEmail] = useState('');            // NM_EMAIL
-  const [nr_cpf, setNrCpf] = useState('');                // NR_CPF
-  const [id_logradouro, setIdLogradouro] = useState('');  // ID_LOGRADOURO (opcional)
+  const [nm_cliente, setNmCliente] = useState('');        
+  const [nm_email, setNmEmail] = useState('');            
+  const [nr_cpf, setNrCpf] = useState('');               
+  const [id_logradouro, setIdLogradouro] = useState('');  
   const [loading, setLoading] = useState(false);
-  const [editId, setEditId] = useState<string | number | null>(null); // ID_CLIENTE
+  const [editId, setEditId] = useState<string | number | null>(null); 
 
-  // Buscar clientes da API
+ 
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -83,7 +83,7 @@ export default function ClienteScreen({ navigation }: any) {
 
     try {
       if (editId !== null && editId !== undefined) {
-        await updateCliente(payload); // sua função deve aceitar snake_case
+        await updateCliente(payload); 
         Alert.alert('Sucesso', 'Cliente atualizado!');
       } else {
         await addCliente(payload);
@@ -112,7 +112,7 @@ export default function ClienteScreen({ navigation }: any) {
         style: 'destructive',
         onPress: async () => {
           try {
-            // ajuste sua função para receber o id direto
+            
             await deleteCliente(String(id_cliente));
             Alert.alert('Sucesso', 'Cliente excluído!');
             fetchData();
@@ -187,7 +187,7 @@ export default function ClienteScreen({ navigation }: any) {
                   styles.input,
                   { borderColor: theme.primary, color: theme.text },
                 ]}
-                placeholder="Nome (NM_CLIENTE)"
+                placeholder="Nome"
                 placeholderTextColor="#888"
                 value={nm_cliente}
                 onChangeText={setNmCliente}
@@ -198,7 +198,7 @@ export default function ClienteScreen({ navigation }: any) {
                   styles.input,
                   { borderColor: theme.primary, color: theme.text },
                 ]}
-                placeholder="Email (NM_EMAIL)"
+                placeholder="Email"
                 placeholderTextColor="#888"
                 value={nm_email}
                 onChangeText={setNmEmail}
@@ -211,7 +211,7 @@ export default function ClienteScreen({ navigation }: any) {
                   styles.input,
                   { borderColor: theme.primary, color: theme.text },
                 ]}
-                placeholder="CPF - NR_CPF (somente números)"
+                placeholder="CPF"
                 placeholderTextColor="#888"
                 value={nr_cpf}
                 onChangeText={setNrCpf}
@@ -224,7 +224,7 @@ export default function ClienteScreen({ navigation }: any) {
                   styles.input,
                   { borderColor: theme.primary, color: theme.text },
                 ]}
-                placeholder="ID_LOGRADOURO (opcional)"
+                placeholder="ID LOGRADOURO (opcional)"
                 placeholderTextColor="#888"
                 value={id_logradouro}
                 onChangeText={setIdLogradouro}

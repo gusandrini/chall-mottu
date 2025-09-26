@@ -31,15 +31,16 @@ export default function MotoScreen({ navigation }: any) {
   const [status, setStatus] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [editId, setEditId] = useState<number | undefined>(undefined);
 
-  // 🔹 Buscar dados
+ 
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await getMotos();
       setMotos(response.data || []);
-    } catch {
+    } catch (err) {
+      console.error("Erro ao buscar motos:", err);
       Alert.alert('Erro', 'Não foi possível carregar as motos.');
     } finally {
       setLoading(false);
@@ -50,7 +51,7 @@ export default function MotoScreen({ navigation }: any) {
     fetchData();
   }, []);
 
-  // 🔹 Salvar ou atualizar
+
   const handleSave = async () => {
     if (!idCliente || !idFilialDepartamento || !modelo || !placa || !kmRodado || !status) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
@@ -58,7 +59,7 @@ export default function MotoScreen({ navigation }: any) {
     }
 
     const payload: Moto = {
-      idMoto: editId ?? 0,
+      idMoto: editId, // só manda se existir
       cliente: { idCliente: parseInt(idCliente, 10) },
       filialDepartamento: { idFilialDepartamento: parseInt(idFilialDepartamento, 10) },
       nmModelo: modelo,
@@ -68,7 +69,7 @@ export default function MotoScreen({ navigation }: any) {
     };
 
     try {
-      if (editId) {
+      if (editId !== undefined) {
         await updateMoto(payload);
         Alert.alert('Sucesso', 'Moto atualizada!');
       } else {
@@ -77,12 +78,13 @@ export default function MotoScreen({ navigation }: any) {
       }
       fetchData();
       resetForm();
-    } catch {
+    } catch (err) {
+      console.error("Erro ao salvar moto:", err);
       Alert.alert('Erro', 'Não foi possível salvar.');
     }
   };
 
-  // 🔹 Editar
+
   const handleEdit = (item: Moto) => {
     setEditId(item.idMoto);
     setIdCliente(item.cliente?.idCliente?.toString() || '');
@@ -100,7 +102,7 @@ export default function MotoScreen({ navigation }: any) {
     setPlaca('');
     setKmRodado('');
     setStatus('');
-    setEditId(null);
+    setEditId(undefined);
   };
 
   const renderItem = ({ item }: { item: Moto }) => (
@@ -139,15 +141,14 @@ export default function MotoScreen({ navigation }: any) {
 
       <FlatList
         data={motos}
-        keyExtractor={(item) => item.idMoto.toString()}
+        keyExtractor={(item) => String(item.idMoto ?? Math.random())}
         renderItem={renderItem}
         ListHeaderComponent={
           <>
             <Text style={[styles.title, { color: theme.primary }]}>
-              {editId ? 'Editar Moto' : 'Cadastro de Motos'}
+              {editId !== undefined ? 'Editar Moto' : 'Cadastro de Motos'}
             </Text>
 
-            {/* Inputs */}
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
               placeholder="ID Cliente"
@@ -195,13 +196,12 @@ export default function MotoScreen({ navigation }: any) {
               onChangeText={setStatus}
             />
 
-            {/* Botão salvar */}
             <TouchableOpacity
               style={[styles.button, { borderColor: theme.primary }]}
               onPress={handleSave}
             >
               <Text style={{ color: theme.text }}>
-                {editId ? 'Atualizar' : 'Adicionar'}
+                {editId !== undefined ? 'Atualizar' : 'Adicionar'}
               </Text>
             </TouchableOpacity>
 

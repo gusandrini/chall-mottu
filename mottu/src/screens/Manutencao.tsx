@@ -38,7 +38,7 @@ export default function ManutencaoScreen({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
 
-  // 🔹 Buscar dados
+  
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -55,7 +55,7 @@ export default function ManutencaoScreen({ navigation }: any) {
     fetchData();
   }, []);
 
-  // 🔹 Salvar ou atualizar
+
   const handleSave = async () => {
     if (!descricao || !dataEntrada || !idMoto) {
       Alert.alert('Erro', 'Preencha os campos obrigatórios.');
@@ -85,7 +85,7 @@ export default function ManutencaoScreen({ navigation }: any) {
     }
   };
 
-  // 🔹 Excluir
+  
   const handleDelete = (idManutencao: number) => {
     Alert.alert('Confirmação', 'Deseja realmente excluir?', [
       { text: 'Cancelar', style: 'cancel' },
@@ -105,7 +105,7 @@ export default function ManutencaoScreen({ navigation }: any) {
     ]);
   };
 
-  // 🔹 Editar
+  
   const handleEdit = (item: Manutencao) => {
     setEditId(item.idManutencao);
     setDescricao(item.dsManutencao);
@@ -127,7 +127,7 @@ export default function ManutencaoScreen({ navigation }: any) {
       <Header />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Formulário */}
+        
         <Text style={[styles.title, { color: theme.text }]}>
           {editId ? 'Editar Manutenção' : 'Adicionar Manutenção'}
         </Text>
@@ -206,7 +206,7 @@ export default function ManutencaoScreen({ navigation }: any) {
           ))
         )}
 
-        {/* Botão voltar */}
+        
         <TouchableOpacity
           style={[styles.backButton, { borderColor: theme.primary }]}
           onPress={() => navigation.navigate('Home')}

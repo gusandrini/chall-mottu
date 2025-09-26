@@ -29,7 +29,6 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // remove sessão
       await AsyncStorage.multiRemove(['userId', 'token']);
-      // opcional: emitir evento global para redirecionar p/ Login
       console.log("Sessão expirada, faça login novamente.");
     }
     return Promise.reject(error);
