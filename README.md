@@ -10,7 +10,7 @@
 |----------------------|----------|---------|
 | Gustavo Sandrini     | 557505   | 2TDSPW  |
 | Eduarda Tiemi        | 554756   | 2TDSPH  |
-| Felipe Pizzinato     | 555141   | 2TDSPH  |
+| Felipe Pizzinato     | 555141   | 2TDSPW  |
 
 ---
 
@@ -35,6 +35,9 @@ Essa solução traz **agilidade**, **rastreamento preciso** e **organização ef
 - 🐬 **Oracle DB / MySQL** – Armazenamento e gestão de dados  
 
 ---
+
+### Vídeo exemplo da aplicação:
+https://www.youtube.com/watch?v=NHxCBjBFrJE
 
 ## ▶️ Como Rodar o Projeto Localmente
 
