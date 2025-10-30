@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   NavigationContainer,
@@ -8,6 +8,9 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
+import { I18nProvider } from "@/i18n/I18nProvider";
+import { Platform } from 'react-native';
 
 import Login from './src/screens/Login';
 import Home from './src/components/Home';
@@ -23,11 +26,29 @@ import { SessionProvider } from './src/services/SessionProvider';
 
 const Stack = createNativeStackNavigator();
 
-// 🔹 aplica o tema dentro da Navigation
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
+
 function AppNavigator() {
   const { theme } = useTheme();
 
-  // decide se vai usar base claro ou escuro
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'Padrão',
+        importance: Notifications.AndroidImportance.DEFAULT,
+      });
+    }
+  }, []);
+
   const baseTheme = theme.background === '#000' ? DarkTheme : DefaultTheme;
 
   const navigationTheme = {
@@ -44,18 +65,20 @@ function AppNavigator() {
   };
 
   return (
-    <NavigationContainer theme={navigationTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="CadastroFuncionario" component={CadastroFuncionario} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Cliente" component={Cliente} />
-        <Stack.Screen name="Funcionario" component={Funcionario} />
-        <Stack.Screen name="Manutencao" component={Manutencao} />
-        <Stack.Screen name="Moto" component={Moto} />
-        <Stack.Screen name="SobreNos" component={SobreNos} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <I18nProvider>
+      <NavigationContainer theme={navigationTheme}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="CadastroFuncionario" component={CadastroFuncionario} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Cliente" component={Cliente} />
+          <Stack.Screen name="Funcionario" component={Funcionario} />
+          <Stack.Screen name="Manutencao" component={Manutencao} />
+          <Stack.Screen name="Moto" component={Moto} />
+          <Stack.Screen name="SobreNos" component={SobreNos} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </I18nProvider>
   );
 }
 
