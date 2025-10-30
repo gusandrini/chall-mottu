@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios'; 
 import { useSession } from '../services/SessionProvider';
 import { useTheme } from '../context/ThemeContext';
+import { scheduleLoginNotification} from '@/Notificacao';
 
 export default function Login({ navigation }: any) {
   const { login } = useSession();
@@ -37,6 +38,8 @@ export default function Login({ navigation }: any) {
         Alert.alert('Dados inválidos', 'E-mail ou senha incorretos.');
         return;
       }
+
+      scheduleLoginNotification();
 
       navigation.replace('Home');
     } catch (err: any) {
@@ -126,7 +129,6 @@ export default function Login({ navigation }: any) {
         </TouchableOpacity>
       </View>
 
-      
       <Modal transparent visible={loading} animationType="fade">
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.primary} />
