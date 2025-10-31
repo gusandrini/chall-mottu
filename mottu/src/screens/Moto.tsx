@@ -18,9 +18,11 @@ import Footer from '../components/Footer';
 import { useTheme } from '../context/ThemeContext';
 import { Moto } from '../models/moto';
 import { getMotos, addMoto, updateMoto } from '../api/moto';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function MotoScreen({ navigation }: any) {
   const { theme } = useTheme();
+  const { t } = useI18n();
 
   const [motos, setMotos] = useState<Moto[]>([]);
   const [idCliente, setIdCliente] = useState('');
@@ -33,7 +35,6 @@ export default function MotoScreen({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [editId, setEditId] = useState<number | undefined>(undefined);
 
- 
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -41,7 +42,7 @@ export default function MotoScreen({ navigation }: any) {
       setMotos(response.data || []);
     } catch (err) {
       console.error("Erro ao buscar motos:", err);
-      Alert.alert('Erro', 'Não foi possível carregar as motos.');
+      Alert.alert(t('bikes.alerts.errorTitle'), t('bikes.alerts.loadError'));
     } finally {
       setLoading(false);
     }
@@ -51,15 +52,14 @@ export default function MotoScreen({ navigation }: any) {
     fetchData();
   }, []);
 
-
   const handleSave = async () => {
     if (!idCliente || !idFilialDepartamento || !modelo || !placa || !kmRodado || !status) {
-      Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
+      Alert.alert(t('bikes.alerts.errorTitle'), t('bikes.alerts.requiredFields'));
       return;
     }
 
     const payload: Moto = {
-      idMoto: editId, // só manda se existir
+      idMoto: editId,
       cliente: { idCliente: parseInt(idCliente, 10) },
       filialDepartamento: { idFilialDepartamento: parseInt(idFilialDepartamento, 10) },
       nmModelo: modelo,
@@ -71,19 +71,18 @@ export default function MotoScreen({ navigation }: any) {
     try {
       if (editId !== undefined) {
         await updateMoto(payload);
-        Alert.alert('Sucesso', 'Moto atualizada!');
+        Alert.alert(t('bikes.alerts.successTitle'), t('bikes.alerts.updated'));
       } else {
         await addMoto(payload);
-        Alert.alert('Sucesso', 'Moto cadastrada!');
+        Alert.alert(t('bikes.alerts.successTitle'), t('bikes.alerts.created'));
       }
       fetchData();
       resetForm();
     } catch (err) {
       console.error("Erro ao salvar moto:", err);
-      Alert.alert('Erro', 'Não foi possível salvar.');
+      Alert.alert(t('bikes.alerts.errorTitle'), t('bikes.alerts.saveError'));
     }
   };
-
 
   const handleEdit = (item: Moto) => {
     setEditId(item.idMoto);
@@ -114,16 +113,16 @@ export default function MotoScreen({ navigation }: any) {
     >
       <View style={{ flex: 1 }}>
         <Text style={[styles.motoText, { color: theme.text }]}>
-          Modelo: {item.nmModelo}
+          {t('bikes.labels.model')}: {item.nmModelo}
         </Text>
         <Text style={[styles.motoText, { color: theme.text }]}>
-          Placa: {item.nmPlaca}
+          {t('bikes.labels.plate')}: {item.nmPlaca}
         </Text>
         <Text style={[styles.motoText, { color: theme.text }]}>
-          Status: {item.stMoto}
+          {t('bikes.labels.status')}: {item.stMoto}
         </Text>
         <Text style={[styles.motoText, { color: theme.text }]}>
-          Km Rodado: {item.kmRodado}
+          {t('bikes.labels.kmDriven')}: {item.kmRodado}
         </Text>
       </View>
 
@@ -146,12 +145,12 @@ export default function MotoScreen({ navigation }: any) {
         ListHeaderComponent={
           <>
             <Text style={[styles.title, { color: theme.primary }]}>
-              {editId !== undefined ? 'Editar Moto' : 'Cadastro de Motos'}
+              {editId !== undefined ? t('bikes.titles.edit') : t('bikes.titles.add')}
             </Text>
 
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="ID Cliente"
+              placeholder={t('bikes.placeholders.clientId')}
               placeholderTextColor="#888"
               value={idCliente}
               onChangeText={setIdCliente}
@@ -159,7 +158,7 @@ export default function MotoScreen({ navigation }: any) {
             />
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="ID Filial Departamento"
+              placeholder={t('bikes.placeholders.branchDeptId')}
               placeholderTextColor="#888"
               value={idFilialDepartamento}
               onChangeText={setIdFilialDepartamento}
@@ -167,14 +166,14 @@ export default function MotoScreen({ navigation }: any) {
             />
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="Modelo"
+              placeholder={t('bikes.placeholders.model')}
               placeholderTextColor="#888"
               value={modelo}
               onChangeText={setModelo}
             />
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="Placa"
+              placeholder={t('bikes.placeholders.plate')}
               placeholderTextColor="#888"
               value={placa}
               onChangeText={setPlaca}
@@ -182,7 +181,7 @@ export default function MotoScreen({ navigation }: any) {
             />
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="Km Rodado"
+              placeholder={t('bikes.placeholders.kmDriven')}
               placeholderTextColor="#888"
               value={kmRodado}
               onChangeText={setKmRodado}
@@ -190,7 +189,7 @@ export default function MotoScreen({ navigation }: any) {
             />
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-              placeholder="Status"
+              placeholder={t('bikes.placeholders.status')}
               placeholderTextColor="#888"
               value={status}
               onChangeText={setStatus}
@@ -201,7 +200,7 @@ export default function MotoScreen({ navigation }: any) {
               onPress={handleSave}
             >
               <Text style={{ color: theme.text }}>
-                {editId !== undefined ? 'Atualizar' : 'Adicionar'}
+                {editId !== undefined ? t('bikes.actions.update') : t('bikes.actions.add')}
               </Text>
             </TouchableOpacity>
 
@@ -221,7 +220,7 @@ export default function MotoScreen({ navigation }: any) {
           >
             <Ionicons name="arrow-back-outline" size={20} color={theme.text} />
             <Text style={{ color: theme.text, marginLeft: 6 }}>
-              Voltar ao Home
+              {t('bikes.actions.backHome')}
             </Text>
           </TouchableOpacity>
         }

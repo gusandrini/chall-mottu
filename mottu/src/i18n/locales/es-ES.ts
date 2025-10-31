@@ -191,6 +191,41 @@ export default {
       delete: "Eliminar"
     }
   },
+    bikes: {
+    titles: {
+      add: "Registro de Motos",
+      edit: "Editar Moto"
+    },
+    placeholders: {
+      clientId: "ID Cliente",
+      branchDeptId: "ID Sucursal/Departamento",
+      model: "Modelo",
+      plate: "Placa",
+      kmDriven: "Km Recorridos",
+      status: "Estado"
+    },
+    actions: {
+      add: "Agregar",
+      update: "Actualizar",
+      backHome: "Volver al Home"
+    },
+    labels: {
+      model: "Modelo",
+      plate: "Placa",
+      status: "Estado",
+      kmDriven: "Km Recorridos"
+    },
+    alerts: {
+      errorTitle: "Error",
+      successTitle: "Éxito",
+      loadError: "No fue posible cargar las motos.",
+      requiredFields: "Completa todos los campos obligatorios.",
+      saveError: "No fue posible guardar.",
+      created: "¡Moto registrada!",
+      updated: "¡Moto actualizada!"
+    }
+  }
+
 
 
 };

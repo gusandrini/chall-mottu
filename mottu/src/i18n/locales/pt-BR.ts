@@ -183,6 +183,41 @@ export default {
       delete: "Excluir"
     }
   },
+    bikes: {
+    titles: {
+      add: "Cadastro de Motos",
+      edit: "Editar Moto"
+    },
+    placeholders: {
+      clientId: "ID Cliente",
+      branchDeptId: "ID Filial Departamento",
+      model: "Modelo",
+      plate: "Placa",
+      kmDriven: "Km Rodado",
+      status: "Status"
+    },
+    actions: {
+      add: "Adicionar",
+      update: "Atualizar",
+      backHome: "Voltar ao Home"
+    },
+    labels: {
+      model: "Modelo",
+      plate: "Placa",
+      status: "Status",
+      kmDriven: "Km Rodado"
+    },
+    alerts: {
+      errorTitle: "Erro",
+      successTitle: "Sucesso",
+      loadError: "Não foi possível carregar as motos.",
+      requiredFields: "Preencha todos os campos obrigatórios.",
+      saveError: "Não foi possível salvar.",
+      created: "Moto cadastrada!",
+      updated: "Moto atualizada!"
+    }
+  }
+
 
 
 };
