@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -20,9 +19,11 @@ import { getFuncionario } from '../api/funcionario';
 import { Funcionario } from '../models/funcionario';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function FuncionarioScreen() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [funcionario, setFuncionario] = useState<Funcionario | null>(null);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
@@ -31,7 +32,7 @@ export default function FuncionarioScreen() {
     try {
       const userId = await AsyncStorage.getItem('userId');
       if (!userId) {
-        Alert.alert('Erro', 'Usuário não autenticado!');
+        Alert.alert(t('profile.alerts.errorTitle'), t('profile.alerts.unauthenticated'));
         navigation.reset({
           index: 0,
           routes: [{ name: 'Login' as never }],
@@ -42,7 +43,7 @@ export default function FuncionarioScreen() {
       const response = await getFuncionario(userId);
       setFuncionario(response.data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os dados do funcionário.');
+      Alert.alert(t('profile.alerts.errorTitle'), t('profile.alerts.loadError'));
     } finally {
       setLoading(false);
     }
@@ -54,36 +55,28 @@ export default function FuncionarioScreen() {
 
   const handleLogout = async () => {
     try {
-      
       await AsyncStorage.multiRemove(['userId', 'token']);
       setFuncionario(null);
-
       navigation.reset({
         index: 0,
         routes: [{ name: 'Login' as never }],
       });
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível sair da conta.');
+      Alert.alert(t('profile.alerts.errorTitle'), t('profile.alerts.logoutError'));
     }
   };
 
   return (
-    <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: theme.background }]}
-    >
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <Header />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={[styles.title, { color: theme.primary }]}>
-          Dados do Funcionário
+          {t('profile.title')}
         </Text>
 
         {loading ? (
-          <ActivityIndicator
-            size="large"
-            color={theme.primary}
-            style={{ marginTop: 20 }}
-          />
+          <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 20 }} />
         ) : funcionario ? (
           <View
             style={[
@@ -91,55 +84,26 @@ export default function FuncionarioScreen() {
               { backgroundColor: theme.background, borderColor: theme.primary },
             ]}
           >
-            <Item
-              icon="person-outline"
-              label="Nome"
-              value={funcionario.nome}
-              theme={theme}
-            />
-            <Item
-              icon="mail-outline"
-              label="Email"
-              value={funcionario.emailCorporativo}
-              theme={theme}
-            />
-            <Item
-              icon="briefcase-outline"
-              label="Cargo"
-              value={funcionario.cargo}
-              theme={theme}
-            />
+            <Item icon="person-outline" label={t('profile.fields.name')}  value={funcionario.nome}              theme={theme} />
+            <Item icon="mail-outline"   label={t('profile.fields.email')} value={funcionario.emailCorporativo} theme={theme} />
+            <Item icon="briefcase-outline" label={t('profile.fields.role')} value={funcionario.cargo}         theme={theme} />
           </View>
         ) : (
-          <Text style={[styles.empty, { color: theme.text }]}>
-            Nenhum dado encontrado.
-          </Text>
+          <Text style={[styles.empty, { color: theme.text }]}>{t('profile.empty')}</Text>
         )}
 
         <TouchableOpacity
           style={[styles.backButton, { borderColor: theme.primary }]}
           onPress={() => navigation.goBack()}
         >
-          <Ionicons
-            name="arrow-back-outline"
-            size={20}
-            color={theme.text}
-            style={{ marginRight: 8 }}
-          />
-          <Text style={[styles.buttonText, { color: theme.text }]}>
-            Voltar
-          </Text>
+          <Ionicons name="arrow-back-outline" size={20} color={theme.text} style={{ marginRight: 8 }} />
+          <Text style={[styles.buttonText, { color: theme.text }]}>{t('common.back')}</Text>
         </TouchableOpacity>
 
         <View style={styles.logoutContainer}>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Ionicons
-              name="log-out-outline"
-              size={18}
-              color="#fff"
-              style={{ marginRight: 6 }}
-            />
-            <Text style={styles.logoutText}>Logout</Text>
+            <Ionicons name="log-out-outline" size={18} color="#fff" style={{ marginRight: 6 }} />
+            <Text style={styles.logoutText}>{t('profile.actions.logout')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -162,12 +126,7 @@ function Item({
 }) {
   return (
     <View style={styles.itemRow}>
-      <Ionicons
-        name={icon}
-        size={18}
-        color={theme.primary}
-        style={styles.itemIcon}
-      />
+      <Ionicons name={icon} size={18} color={theme.primary} style={styles.itemIcon} />
       <Text style={[styles.itemText, { color: theme.text }]}>
         <Text style={[styles.itemLabel, { color: theme.primary }]}>{label}:</Text>{' '}
         {value}
@@ -190,29 +149,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   logoutText: { color: '#fff', fontSize: 14, fontWeight: '600' },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  item: {
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-  },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
+  item: { borderRadius: 12, padding: 20, marginBottom: 20, borderWidth: 1 },
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
   itemIcon: { marginRight: 12 },
   itemText: { fontSize: 15, flexShrink: 1 },
   itemLabel: { fontWeight: '600' },
   backButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 12,
-    paddingVertical: 14,
-    borderWidth: 1,
+    flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+    borderRadius: 12, paddingVertical: 14, borderWidth: 1,
   },
   buttonText: { fontSize: 16, fontWeight: '600' },
   empty: { textAlign: 'center', marginTop: 20 },

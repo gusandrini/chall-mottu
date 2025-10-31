@@ -108,5 +108,23 @@ export default {
       cancel: "Cancelar",
       delete: "Eliminar"
     }
+  },
+   profile: {
+    title: "Datos del Empleado",
+    fields: {
+      name: "Nombre",
+      email: "Correo",
+      role: "Cargo"
+    },
+    empty: "No se encontraron datos.",
+    actions: {
+      logout: "Cerrar sesión"
+    },
+    alerts: {
+      errorTitle: "Error",
+      unauthenticated: "¡Usuario no autenticado!",
+      loadError: "No fue posible cargar los datos del empleado.",
+      logoutError: "No fue posible cerrar la sesión."
+    }
   }
 };

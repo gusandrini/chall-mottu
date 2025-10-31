@@ -59,8 +59,10 @@ export default {
       unknownServerError: "Erro desconhecido no servidor.",
       cannotConnect: "Não foi possível conectar ao servidor.",
       errorCode: "Erro"
-    },
-    clients: {
+    }
+  },
+
+  clients: {
     placeholders: {
       name: "Nome",
       email: "Email",
@@ -97,6 +99,24 @@ export default {
       cancel: "Cancelar",
       delete: "Excluir"
     }
-  }
+  },
+
+  profile: {
+    title: "Dados do Funcionário",
+    fields: {
+      name: "Nome",
+      email: "Email",
+      role: "Cargo"
+    },
+    empty: "Nenhum dado encontrado.",
+    actions: {
+      logout: "Logout"
+    },
+    alerts: {
+      errorTitle: "Erro",
+      unauthenticated: "Usuário não autenticado!",
+      loadError: "Não foi possível carregar os dados do funcionário.",
+      logoutError: "Não foi possível sair da conta."
+    }
   }
 };
