@@ -12,7 +12,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -25,9 +24,11 @@ import {
 
 import { Manutencao } from '../models/manutencao';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function ManutencaoScreen({ navigation }: any) {
   const { theme } = useTheme();
+  const { t } = useI18n();
 
   const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
   const [descricao, setDescricao] = useState('');
@@ -38,14 +39,13 @@ export default function ManutencaoScreen({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
 
-  
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await getManutencoes();
       setManutencoes(response.data || []);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar as manutenções.');
+      Alert.alert(t('maintenance.alerts.errorTitle'), t('maintenance.alerts.loadError'));
     } finally {
       setLoading(false);
     }
@@ -55,10 +55,9 @@ export default function ManutencaoScreen({ navigation }: any) {
     fetchData();
   }, []);
 
-
   const handleSave = async () => {
     if (!descricao || !dataEntrada || !idMoto) {
-      Alert.alert('Erro', 'Preencha os campos obrigatórios.');
+      Alert.alert(t('maintenance.alerts.errorTitle'), t('maintenance.alerts.requiredFields'));
       return;
     }
 
@@ -73,39 +72,37 @@ export default function ManutencaoScreen({ navigation }: any) {
     try {
       if (editId) {
         await updateManutencao(payload);
-        Alert.alert('Sucesso', 'Manutenção atualizada!');
+        Alert.alert(t('maintenance.alerts.successTitle'), t('maintenance.alerts.updated'));
       } else {
         await addManutencao(payload);
-        Alert.alert('Sucesso', 'Manutenção criada!');
+        Alert.alert(t('maintenance.alerts.successTitle'), t('maintenance.alerts.created'));
       }
       fetchData();
       resetForm();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar.');
+      Alert.alert(t('maintenance.alerts.errorTitle'), t('maintenance.alerts.saveError'));
     }
   };
 
-  
   const handleDelete = (idManutencao: number) => {
-    Alert.alert('Confirmação', 'Deseja realmente excluir?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('maintenance.confirm.title'), t('maintenance.confirm.message'), [
+      { text: t('maintenance.confirm.cancel'), style: 'cancel' },
       {
-        text: 'Excluir',
+        text: t('maintenance.confirm.delete'),
         style: 'destructive',
         onPress: async () => {
           try {
             await deleteManutencao(idManutencao);
-            Alert.alert('Sucesso', 'Manutenção excluída!');
+            Alert.alert(t('maintenance.alerts.successTitle'), t('maintenance.alerts.deleted'));
             fetchData();
           } catch {
-            Alert.alert('Erro', 'Não foi possível excluir.');
+            Alert.alert(t('maintenance.alerts.errorTitle'), t('maintenance.alerts.deleteError'));
           }
         },
       },
     ]);
   };
 
-  
   const handleEdit = (item: Manutencao) => {
     setEditId(item.idManutencao);
     setDescricao(item.dsManutencao);
@@ -127,14 +124,13 @@ export default function ManutencaoScreen({ navigation }: any) {
       <Header />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        
         <Text style={[styles.title, { color: theme.text }]}>
-          {editId ? 'Editar Manutenção' : 'Adicionar Manutenção'}
+          {editId ? t('maintenance.titles.edit') : t('maintenance.titles.add')}
         </Text>
 
         <TextInput
           style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="ID da Moto"
+          placeholder={t('maintenance.placeholders.motorId')}
           value={idMoto}
           onChangeText={setIdMoto}
           keyboardType="numeric"
@@ -142,21 +138,21 @@ export default function ManutencaoScreen({ navigation }: any) {
         />
         <TextInput
           style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Descrição"
+          placeholder={t('maintenance.placeholders.description')}
           value={descricao}
           onChangeText={setDescricao}
           placeholderTextColor="#888"
         />
         <TextInput
           style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Data Entrada (YYYY-MM-DD)"
+          placeholder={t('maintenance.placeholders.entryDate')}
           value={dataEntrada}
           onChangeText={setDataEntrada}
           placeholderTextColor="#888"
         />
         <TextInput
           style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
-          placeholder="Data Saída (YYYY-MM-DD)"
+          placeholder={t('maintenance.placeholders.exitDate')}
           value={dataSaida}
           onChangeText={setDataSaida}
           placeholderTextColor="#888"
@@ -167,7 +163,7 @@ export default function ManutencaoScreen({ navigation }: any) {
           onPress={handleSave}
         >
           <Text style={[styles.buttonText, { color: theme.text }]}>
-            {editId ? 'Atualizar' : 'Adicionar'}
+            {editId ? t('maintenance.actions.update') : t('maintenance.actions.add')}
           </Text>
         </TouchableOpacity>
 
@@ -184,13 +180,13 @@ export default function ManutencaoScreen({ navigation }: any) {
                   {item.dsManutencao}
                 </Text>
                 <Text style={[styles.itemText, { color: theme.text }]}>
-                  Moto: {item.moto?.idMoto}
+                  {t('maintenance.labels.motor')}: {item.moto?.idMoto}
                 </Text>
                 <Text style={[styles.itemText, { color: theme.text }]}>
-                  Entrada: {item.dtEntrada}
+                  {t('maintenance.labels.entry')}: {item.dtEntrada}
                 </Text>
                 <Text style={[styles.itemText, { color: theme.text }]}>
-                  Saída: {item.dtSaida ?? 'Em aberto'}
+                  {t('maintenance.labels.exit')}: {item.dtSaida ?? t('maintenance.labels.open')}
                 </Text>
               </View>
 
@@ -206,13 +202,14 @@ export default function ManutencaoScreen({ navigation }: any) {
           ))
         )}
 
-        
         <TouchableOpacity
           style={[styles.backButton, { borderColor: theme.primary }]}
           onPress={() => navigation.navigate('Home')}
         >
           <Ionicons name="arrow-back-outline" size={20} color={theme.text} />
-          <Text style={[styles.buttonText, { color: theme.text }]}>Voltar ao Home</Text>
+          <Text style={[styles.buttonText, { color: theme.text }]}>
+            {t('maintenance.actions.backHome')}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
 

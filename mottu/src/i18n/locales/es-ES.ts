@@ -151,5 +151,46 @@ export default {
     },
     loading: "Conectando con el servidor..."
   },
+    maintenance: {
+    titles: {
+      add: "Agregar Mantenimiento",
+      edit: "Editar Mantenimiento"
+    },
+    placeholders: {
+      motorId: "ID de la Moto",
+      description: "Descripción",
+      entryDate: "Fecha de Entrada (YYYY-MM-DD)",
+      exitDate: "Fecha de Salida (YYYY-MM-DD)"
+    },
+    actions: {
+      add: "Agregar",
+      update: "Actualizar",
+      backHome: "Volver al Home"
+    },
+    labels: {
+      motor: "Moto",
+      entry: "Entrada",
+      exit: "Salida",
+      open: "Abierto"
+    },
+    alerts: {
+      errorTitle: "Error",
+      successTitle: "Éxito",
+      loadError: "No fue posible cargar los mantenimientos.",
+      requiredFields: "Completa los campos obligatorios.",
+      saveError: "No fue posible guardar.",
+      deleted: "¡Mantenimiento eliminado!",
+      updated: "¡Mantenimiento actualizado!",
+      created: "¡Mantenimiento creado!",
+      deleteError: "No fue posible eliminar."
+    },
+    confirm: {
+      title: "Confirmación",
+      message: "¿Deseas eliminar realmente?",
+      cancel: "Cancelar",
+      delete: "Eliminar"
+    }
+  },
+
 
 };
