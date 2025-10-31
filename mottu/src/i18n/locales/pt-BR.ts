@@ -118,5 +118,30 @@ export default {
       loadError: "Não foi possível carregar os dados do funcionário.",
       logoutError: "Não foi possível sair da conta."
     }
-  }
+  },
+    login: {
+    title: "Bem-vindo",
+    subtitle: "Faça login para continuar",
+    placeholders: {
+      email: "Email",
+      password: "Senha"
+    },
+    actions: {
+      enter: "Entrar",
+      register: "Não tem conta? Criar agora"
+    },
+    alerts: {
+      warningTitle: "Atenção",
+      fillFields: "Preencha e-mail e senha.",
+      invalidTitle: "Dados inválidos",
+      invalidMessage: "E-mail ou senha incorretos.",
+      serverErrorTitle: "Erro no servidor",
+      serverErrorMessage: "Tente novamente mais tarde.",
+      errorTitle: "Erro",
+      connectionError: "Não foi possível conectar ao servidor.",
+      unexpectedError: "Erro inesperado. Verifique sua conexão."
+    },
+    loading: "Conectando com o servidor..."
+  },
+
 };

@@ -126,5 +126,30 @@ export default {
       loadError: "No fue posible cargar los datos del empleado.",
       logoutError: "No fue posible cerrar la sesión."
     }
-  }
+  },
+    login: {
+    title: "Bienvenido",
+    subtitle: "Inicia sesión para continuar",
+    placeholders: {
+      email: "Correo electrónico",
+      password: "Contraseña"
+    },
+    actions: {
+      enter: "Entrar",
+      register: "¿No tienes cuenta? Crear ahora"
+    },
+    alerts: {
+      warningTitle: "Atención",
+      fillFields: "Completa correo y contraseña.",
+      invalidTitle: "Datos inválidos",
+      invalidMessage: "Correo o contraseña incorrectos.",
+      serverErrorTitle: "Error del servidor",
+      serverErrorMessage: "Intenta nuevamente más tarde.",
+      errorTitle: "Error",
+      connectionError: "No fue posible conectar con el servidor.",
+      unexpectedError: "Error inesperado. Verifica tu conexión."
+    },
+    loading: "Conectando con el servidor..."
+  },
+
 };
