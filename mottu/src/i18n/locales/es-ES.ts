@@ -1,13 +1,29 @@
 export default {
-  common: {
-    success: 'Éxito',
-    error: 'Error',
-    cancel: 'Cancelar',
-    tryAgain: 'Intentar de nuevo',
-    empty: 'No se encontraron datos.',
-    errorLoading: 'No fue posible cargar los datos.',
-    loggedOut: 'Has cerrado sesión.',
-    logoutFailed: 'No fue posible cerrar sesión.',
-  },
-
-};
+  "common": { "close": "Cerrar" },
+  "home": {
+    "language": {
+      "title": "Selecciona el idioma",
+      "button": "Idioma",
+      "portuguese": "Portugués (Brasil)",
+      "spanish": "Español (España)",
+      "portugueseShort": "PT-BR",
+      "spanishShort": "ES-ES"
+    },
+    "start": "Empezar 🚀",
+    "mainTitle": "Control Inteligente",
+    "mainSubtitle": "Mottu en Movimiento",
+    "mainDescription": "Gestiona todas las operaciones esenciales de tu unidad con agilidad y seguridad.",
+    "buttons": {
+      "client": "Cliente",
+      "bike": "Moto",
+      "maintenance": "Mantenimiento",
+      "employee": "Empleado",
+      "about": "Sobre Nosotros"
+    },
+    "theme": {
+      "lightMode": "Modo Claro",
+      "darkMode": "Modo Oscuro"
+    }
+  }
+}
+;

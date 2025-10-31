@@ -11,7 +11,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { Platform } from 'react-native';
-
 import Login from './src/screens/Login';
 import Home from './src/components/Home';
 import Cliente from './src/screens/Cliente';
@@ -20,7 +19,6 @@ import Manutencao from './src/screens/Manutencao';
 import Moto from './src/screens/Moto';
 import SobreNos from './src/screens/SobreNos';
 import CadastroFuncionario from './src/screens/CadastroFuncionario';
-
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import { SessionProvider } from './src/services/SessionProvider'; 
 
