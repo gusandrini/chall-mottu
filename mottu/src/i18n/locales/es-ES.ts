@@ -224,7 +224,23 @@ export default {
       created: "¡Moto registrada!",
       updated: "¡Moto actualizada!"
     }
+  },
+    about: {
+    title: "Sobre Nosotros",
+    description:
+      "Somos una empresa especializada en soluciones de alquiler de motos para diversos tipos de servicios. Nuestro objetivo es ofrecer calidad, seguridad y practicidad a nuestros clientes.",
+    phone: "Teléfono",
+    email: "Correo",
+    hours: {
+      title: "Horario de funcionamiento:",
+      weekdays: "Lun. a Vie. de 08:00 a 18:00",
+      saturday: "Sáb. de 09:00 a 12:00"
+    },
+    actions: {
+      backHome: "Volver al Inicio"
+    }
   }
+
 
 
 

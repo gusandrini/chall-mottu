@@ -216,7 +216,23 @@ export default {
       created: "Moto cadastrada!",
       updated: "Moto atualizada!"
     }
+  },
+    about: {
+    title: "Sobre Nós",
+    description:
+      "Somos uma empresa especializada em soluções de locação de motos para diversos tipos de serviços. Nosso objetivo é oferecer qualidade, segurança e praticidade aos nossos clientes.",
+    phone: "Telefone",
+    email: "Email",
+    hours: {
+      title: "Funcionamento das bases:",
+      weekdays: "Seg. a Sex. das 08:00 às 18:00",
+      saturday: "Sáb. das 09:00 às 12:00"
+    },
+    actions: {
+      backHome: "Voltar ao Início"
+    }
   }
+
 
 
 
