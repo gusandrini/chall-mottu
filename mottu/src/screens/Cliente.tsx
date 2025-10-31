@@ -25,9 +25,12 @@ import {
   deleteCliente,
 } from '../api/cliente';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function ClienteScreen({ navigation }: any) {
   const { theme } = useTheme();
+  const { t } = useI18n();
+
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [nm_cliente, setNmCliente] = useState('');        
   const [nm_email, setNmEmail] = useState('');            
@@ -36,7 +39,6 @@ export default function ClienteScreen({ navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [editId, setEditId] = useState<string | number | null>(null); 
 
- 
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -44,7 +46,7 @@ export default function ClienteScreen({ navigation }: any) {
       const data = Array.isArray(rows) ? rows : (rows?.data ?? []);
       setClientes(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os clientes.');
+      Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.loadError'));
       console.log(error);
     } finally {
       setLoading(false);
@@ -60,16 +62,16 @@ export default function ClienteScreen({ navigation }: any) {
 
   const handleSave = async () => {
     if (!nm_cliente || !nm_email || !nr_cpf) {
-      Alert.alert('Erro', 'Preencha Nome, Email e CPF!');
+      Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.requiredFields'));
       return;
     }
     if (!validarEmail(nm_email)) {
-      Alert.alert('Erro', 'Digite um e-mail válido!');
+      Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.invalidEmail'));
       return;
     }
     const cpfDigits = nr_cpf.replace(/\D/g, '');
     if (!validarCPF(cpfDigits)) {
-      Alert.alert('Erro', 'CPF deve ter 11 dígitos.');
+      Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.invalidCpf'));
       return;
     }
 
@@ -84,15 +86,15 @@ export default function ClienteScreen({ navigation }: any) {
     try {
       if (editId !== null && editId !== undefined) {
         await updateCliente(payload); 
-        Alert.alert('Sucesso', 'Cliente atualizado!');
+        Alert.alert(t('clients.alerts.successTitle'), t('clients.alerts.updated'));
       } else {
         await addCliente(payload);
-        Alert.alert('Sucesso', 'Cliente criado!');
+        Alert.alert(t('clients.alerts.successTitle'), t('clients.alerts.created'));
       }
       fetchData();
       handleClearFields();
     } catch {
-      Alert.alert('Erro', 'Não foi possível salvar.');
+      Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.saveError'));
     }
   };
 
@@ -105,20 +107,19 @@ export default function ClienteScreen({ navigation }: any) {
   };
 
   const handleDeleteClient = (id_cliente: string | number) => {
-    Alert.alert('Confirmação', 'Deseja realmente excluir?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('clients.confirm.title'), t('clients.confirm.message'), [
+      { text: t('clients.confirm.cancel'), style: 'cancel' },
       {
-        text: 'Excluir',
+        text: t('clients.confirm.delete'),
         style: 'destructive',
         onPress: async () => {
           try {
-            
             await deleteCliente(String(id_cliente));
-            Alert.alert('Sucesso', 'Cliente excluído!');
+            Alert.alert(t('clients.alerts.successTitle'), t('clients.alerts.deleted'));
             fetchData();
           } catch (error) {
-            console.error("deleteCliente", error)
-            Alert.alert('Erro', 'Não foi possível excluir.');
+            console.error('deleteCliente', error);
+            Alert.alert(t('clients.alerts.errorTitle'), t('clients.alerts.deleteError'));
           }
         },
       },
@@ -141,16 +142,14 @@ export default function ClienteScreen({ navigation }: any) {
       ]}
     >
       <View style={{ flex: 1 }}>
-        <Text style={[styles.itemText, { color: theme.text }]}>
-          {item.nm_cliente}
-        </Text>
+        <Text style={[styles.itemText, { color: theme.text }]}>{item.nm_cliente}</Text>
         <Text style={[styles.itemText, { color: theme.text }]}>{item.nm_email}</Text>
         <Text style={[styles.itemText, { color: theme.text }]}>
-          CPF: {item.nr_cpf}
+          {t('clients.labels.cpf')}: {item.nr_cpf}
         </Text>
         {item.id_logradouro ? (
           <Text style={[styles.itemText, { color: theme.text }]}>
-            Logradouro ID: {item.id_logradouro}
+            {t('clients.labels.addressId')}: {item.id_logradouro}
           </Text>
         ) : null}
       </View>
@@ -183,22 +182,16 @@ export default function ClienteScreen({ navigation }: any) {
           ListHeaderComponent={
             <>
               <TextInput
-                style={[
-                  styles.input,
-                  { borderColor: theme.primary, color: theme.text },
-                ]}
-                placeholder="Nome"
+                style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+                placeholder={t('clients.placeholders.name')}
                 placeholderTextColor="#888"
                 value={nm_cliente}
                 onChangeText={setNmCliente}
               />
 
               <TextInput
-                style={[
-                  styles.input,
-                  { borderColor: theme.primary, color: theme.text },
-                ]}
-                placeholder="Email"
+                style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+                placeholder={t('clients.placeholders.email')}
                 placeholderTextColor="#888"
                 value={nm_email}
                 onChangeText={setNmEmail}
@@ -207,11 +200,8 @@ export default function ClienteScreen({ navigation }: any) {
               />
 
               <TextInput
-                style={[
-                  styles.input,
-                  { borderColor: theme.primary, color: theme.text },
-                ]}
-                placeholder="CPF"
+                style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+                placeholder={t('clients.placeholders.cpf')}
                 placeholderTextColor="#888"
                 value={nr_cpf}
                 onChangeText={setNrCpf}
@@ -220,11 +210,8 @@ export default function ClienteScreen({ navigation }: any) {
               />
 
               <TextInput
-                style={[
-                  styles.input,
-                  { borderColor: theme.primary, color: theme.text },
-                ]}
-                placeholder="ID LOGRADOURO (opcional)"
+                style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
+                placeholder={t('clients.placeholders.addressIdOptional')}
                 placeholderTextColor="#888"
                 value={id_logradouro}
                 onChangeText={setIdLogradouro}
@@ -236,7 +223,7 @@ export default function ClienteScreen({ navigation }: any) {
                 onPress={handleSave}
               >
                 <Text style={[styles.buttonText, { color: theme.text }]}>
-                  {editId ? 'Atualizar Cliente' : 'Adicionar Cliente'}
+                  {editId ? t('clients.actions.update') : t('clients.actions.add')}
                 </Text>
               </TouchableOpacity>
 
@@ -245,7 +232,7 @@ export default function ClienteScreen({ navigation }: any) {
                 onPress={handleClearFields}
               >
                 <Text style={[styles.buttonText, { color: theme.text }]}>
-                  Limpar Campos
+                  {t('clients.actions.clear')}
                 </Text>
               </TouchableOpacity>
 
@@ -261,7 +248,7 @@ export default function ClienteScreen({ navigation }: any) {
           ListEmptyComponent={
             clientes.length === 0 && !loading ? (
               <Text style={[styles.empty, { color: theme.text }]}>
-                Nenhum cliente cadastrado.
+                {t('clients.empty')}
               </Text>
             ) : null
           }
@@ -272,7 +259,7 @@ export default function ClienteScreen({ navigation }: any) {
             >
               <Ionicons name="arrow-back-outline" size={20} color={theme.text} />
               <Text style={[styles.buttonText, { color: theme.text }]}>
-                Voltar ao Home
+                {t('clients.actions.backHome')}
               </Text>
             </TouchableOpacity>
           }

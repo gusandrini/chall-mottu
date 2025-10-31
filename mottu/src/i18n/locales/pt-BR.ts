@@ -59,6 +59,44 @@ export default {
       unknownServerError: "Erro desconhecido no servidor.",
       cannotConnect: "Não foi possível conectar ao servidor.",
       errorCode: "Erro"
+    },
+    clients: {
+    placeholders: {
+      name: "Nome",
+      email: "Email",
+      cpf: "CPF",
+      addressIdOptional: "ID LOGRADOURO (opcional)"
+    },
+    actions: {
+      add: "Adicionar Cliente",
+      update: "Atualizar Cliente",
+      clear: "Limpar Campos",
+      backHome: "Voltar ao Home"
+    },
+    labels: {
+      cpf: "CPF",
+      addressId: "Logradouro ID"
+    },
+    empty: "Nenhum cliente cadastrado.",
+    alerts: {
+      errorTitle: "Erro",
+      successTitle: "Sucesso",
+      loadError: "Não foi possível carregar os clientes.",
+      requiredFields: "Preencha Nome, Email e CPF!",
+      invalidEmail: "Digite um e-mail válido!",
+      invalidCpf: "CPF deve ter 11 dígitos.",
+      created: "Cliente criado!",
+      updated: "Cliente atualizado!",
+      deleted: "Cliente excluído!",
+      saveError: "Não foi possível salvar.",
+      deleteError: "Não foi possível excluir."
+    },
+    confirm: {
+      title: "Confirmação",
+      message: "Deseja realmente excluir?",
+      cancel: "Cancelar",
+      delete: "Excluir"
     }
+  }
   }
 };

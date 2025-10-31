@@ -70,5 +70,43 @@ export default {
       cannotConnect: "No fue posible conectar con el servidor.",
       errorCode: "Error"
     }
+  },
+  clients: {
+    placeholders: {
+      name: "Nombre",
+      email: "Correo",
+      cpf: "CPF",
+      addressIdOptional: "ID DIRECCIÓN (opcional)"
+    },
+    actions: {
+      add: "Añadir Cliente",
+      update: "Actualizar Cliente",
+      clear: "Limpiar Campos",
+      backHome: "Volver al Home"
+    },
+    labels: {
+      cpf: "CPF",
+      addressId: "ID Dirección"
+    },
+    empty: "No hay clientes registrados.",
+    alerts: {
+      errorTitle: "Error",
+      successTitle: "Éxito",
+      loadError: "No fue posible cargar los clientes.",
+      requiredFields: "¡Completa Nombre, Correo y CPF!",
+      invalidEmail: "¡Introduce un correo válido!",
+      invalidCpf: "El CPF debe tener 11 dígitos.",
+      created: "¡Cliente creado!",
+      updated: "¡Cliente actualizado!",
+      deleted: "¡Cliente eliminado!",
+      saveError: "No fue posible guardar.",
+      deleteError: "No fue posible eliminar."
+    },
+    confirm: {
+      title: "Confirmación",
+      message: "¿Realmente deseas eliminar?",
+      cancel: "Cancelar",
+      delete: "Eliminar"
+    }
   }
 };
