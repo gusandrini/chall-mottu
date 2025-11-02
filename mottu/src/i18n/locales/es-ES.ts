@@ -235,6 +235,8 @@ export default {
       weekdays: "Lun. a Vie. de 08:00 a 18:00",
       saturday: "Sáb. de 09:00 a 12:00"
     },
+    version: "Versión",
+    commit: "Commit",
     actions: {
       backHome: "Volver al Inicio"
     }

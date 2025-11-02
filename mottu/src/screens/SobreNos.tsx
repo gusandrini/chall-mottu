@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -12,6 +13,9 @@ export default function SobreNos() {
   const navigation = useNavigation();
   const { theme } = useTheme();
   const { t } = useI18n();
+
+  const version = Constants.expoConfig?.version ?? '1.0.0';
+  const commitHash = Constants.expoConfig?.extra?.commitHash ?? 'desconhecido';
 
   return (
     <View style={[styles.screen, { backgroundColor: theme.background }]}>
@@ -49,14 +53,21 @@ export default function SobreNos() {
         <View style={styles.section}>
           <Ionicons name="time-outline" size={24} color={theme.primary} style={styles.icon} />
           <View>
+            <Text style={[styles.text, { color: theme.text }]}>{t('about.hours.title')}</Text>
+            <Text style={[styles.text, { color: theme.text }]}>{t('about.hours.weekdays')}</Text>
+            <Text style={[styles.text, { color: theme.text }]}>{t('about.hours.saturday')}</Text>
+          </View>
+        </View>
+
+        
+        <View style={styles.section}>
+          <Ionicons name="git-commit-outline" size={24} color={theme.primary} style={styles.icon} />
+          <View style={{ flex: 1 }}>
             <Text style={[styles.text, { color: theme.text }]}>
-              {t('about.hours.title')}
+              {t('about.version') ?? 'Versão'}: <Text>{version}</Text>
             </Text>
             <Text style={[styles.text, { color: theme.text }]}>
-              {t('about.hours.weekdays')}
-            </Text>
-            <Text style={[styles.text, { color: theme.text }]}>
-              {t('about.hours.saturday')}
+              {t('about.commit') ?? 'Commit'}: <Text>{commitHash}</Text>
             </Text>
           </View>
         </View>

@@ -237,9 +237,13 @@ export default {
       weekdays: "Seg. a Sex. das 08:00 às 18:00",
       saturday: "Sáb. das 09:00 às 12:00"
     },
+    version: "Versão",
+    commit: "Commit",
+    build: "Build",
     actions: {
       backHome: "Voltar ao Início"
-    }
+    },
+
   }
 
 
