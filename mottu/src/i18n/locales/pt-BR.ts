@@ -2,6 +2,15 @@ export default {
   common: { close: "Fechar", ok: "OK", back: "Voltar" },
 
   home: {
+    welcomeTitle: "Bem-vindo(a) ao painel!",
+    welcomeBody:
+      "Aqui você gerencia clientes, funcionários, motos e manutenções do pátio de forma simples e rápida.",
+    bullets: {
+      clientsEmployees: "• Cadastre e gerencie clientes e funcionários",
+      bikesMaintenances: "• Controle motos e ordens de manutenção",
+      branchInfo: "• Visualize informações por filial e status",
+      fullPanel: "• Painel completo com ações rápidas",
+    },
     language: {
       title: "Selecione o idioma",
       button: "Idioma",

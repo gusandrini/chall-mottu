@@ -10,7 +10,6 @@ export default {
       portugueseShort: "PT-BR",
       spanishShort: "ES-ES"
     },
-    // (opcional, para o modal de boas-vindas)
     welcomeTitle: "🎉 ¡Bienvenido al sistema de Mottu!",
     welcomeBody: "Aquí gestionas con practicidad y agilidad todas las operaciones esenciales de tu unidad.",
     bullets: {
