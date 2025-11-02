@@ -2,7 +2,7 @@
   "expo": {
     "name": "mottu",
     "slug": "mottu",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,20 +13,35 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "42",
+      "bundleIdentifier": "com.challengemottu"
     },
     "android": {
+      "versionCode": 42,
+      "package": "com.challengemottu",
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "commitHash": "9f0b5c4"
-    }
+      "commitHash": "1b12843",
+      "commitDate": "2025-11-02",
+      "commitAuthor": "Gustavo Sandrini",
+      "eas": {
+        "projectId": "f598a5e4-106f-49f3-91b2-97bb9db17219"
+      }
+    },
+    "updates": {
+      "enabled": false
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
