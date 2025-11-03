@@ -21,7 +21,8 @@ A Mottu enfrenta dificuldades na gestão de frotas em suas filiais. Para resolve
 - 🎥 **Câmeras com visão computacional** para leitura automática de placas  
 - 🧠 **Reconhecimento inteligente** de entrada, saída e movimentações das motos  
 - 🖥️ **Painel web centralizado** para monitoramento em tempo real  
-- 📱 **Aplicativo mobile** para que funcionários atualizem e consultem dados do pátio  
+- 📱 **Aplicativo mobile** para que funcionários atualizem e consultem dados do pátio
+- **pt-BR/es-ES** App suporta Português e Espanhol
 
 Essa solução traz **agilidade**, **rastreamento preciso** e **organização eficiente** para os pátios da Mottu.
 
