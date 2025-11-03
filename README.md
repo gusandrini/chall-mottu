@@ -53,7 +53,7 @@ Entrega **agilidade**, **rastreamento preciso** e **organização eficiente**.
 ### 1) Clonar o repositório
 ```bash
 git clone https://github.com/gusandrini/chall-mottu.git
-cd chall-mottu/mottu
+cd mottu
 ```
 
 ### 2) Instalar dependências
