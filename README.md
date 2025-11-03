@@ -70,9 +70,6 @@ Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dis
 ---
 ## ▶️ Projeto publicado Firebase
 Email do professor adicioando como tester
-
-EXPO --> https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7
-FIREBASE --> https://console.firebase.google.com/u/2/project/challengemottu/appdistribution/app/android:com.challengemottu/releases
 ---
 
 ## 🔐 Login de Teste
