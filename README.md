@@ -91,6 +91,15 @@ npx expo start
 ```
 mottu/
 │
+├──android
+│   ├── #app
+│
+├──assets
+│   ├── #icons
+│
+├──scripts
+│   ├──update-commit-hash.cjs
+│
 ├── src/
 │   ├── api/              # axios + endpoints
 │   ├── components/       # Header, Footer, etc.
