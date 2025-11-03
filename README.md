@@ -62,7 +62,7 @@ Android: pressione "a" | iOS: "i" | Web: "w"
 ### Backend usado (Render)
 Base URL: https://mottu-java.onrender.com
 
-####Observação: o primeiro acesso pode demorar ~3-5 min (cold start grátis).
+#### Observação: o primeiro acesso pode demorar ~3-5 min (cold start grátis).
 
 
 Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dispositivo (Obs: Em IOS é necessário estar conectado na mesma internet).
