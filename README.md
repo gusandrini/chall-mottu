@@ -68,6 +68,12 @@ Base URL: https://mottu-java.onrender.com
 Você poderá escanear o QR Code exibido com o aplicativo **Expo Go** em seu dispositivo (Obs: Em IOS é necessário estar conectado na mesma internet).
 
 ---
+## ▶️ Projeto publicado Firebase
+Email do professor adicioando como tester
+
+EXPO --> https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7
+FIREBASE --> https://console.firebase.google.com/u/2/project/challengemottu/appdistribution/app/android:com.challengemottu/releases
+---
 
 ## 🔐 Login de Teste
 
@@ -99,6 +105,10 @@ mottu/
     components/       # Header, Footer, Home
     
     context/          # ThemeContext
+
+    i18n/             # Tipos --> (locales/es-ES, pt-BR) e I18nProvider.tsx, index.ts
+
+    images/           # Imagens (Logo)
     
     models/           # Tipos TS (Cliente, Moto, etc.)
     
@@ -107,10 +117,22 @@ mottu/
     services/         # SessionProvider (auth)
     
     theme/            # Paleta de cores
+
+    Notificacao.ts    # Funçaõ de notificação
     
   App.tsx
+
+  app.json
+
+  eas.json
+
+  index.tsx
+
+  package-lock.json
   
   package.json
+
+  tsconfig.json
 
 ---
 
@@ -130,8 +152,10 @@ mottu/
 
 🔗 API JAVA -> [https://github.com/gusandrini/mottu-java](https://github.com/gusandrini/mottu-java)
 
-## 📎 Deploy API
+## 📎 Deploy´s
 🔗 [https://mottu-java.onrender.com/h2-console](https://mottu-java.onrender.com/h2-console)
+🔗 [https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7](https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7)
+🔗 [https://console.firebase.google.com/u/2/project/challengemottu/appdistribution/app/android:com.challengemottu/releases](https://console.firebase.google.com/u/2/project/challengemottu/appdistribution/app/android:com.challengemottu/releases)
 
 ---
 
@@ -140,7 +164,6 @@ mottu/
 - Integração com sensores físicos nos portões  
 - Dashboard analítico com gráficos de movimentações  
 - Reconhecimento facial para segurança adicional  
-- Notificações em tempo real no app  
 
 ---
 
