@@ -44,9 +44,14 @@ Entrega **agilidade**, **rastreamento preciso** e **organização eficiente**.
 
 ## 📺 **Demonstração**
 
-🔗 **Vídeo**: [https://www.youtube.com/watch?v=NHxCBjBFrJE](https://youtu.be/gazzEQWqWMg)
+🔗 **Vídeo**: 
 
 ---
+
+##  **Link para download**
+
+🔗 **Download**: [[https://www.youtube.com/watch?v=NHxCBjBFrJE](https://youtu.be/gazzEQWqWMg)](https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7)
+
 
 ## ▶️ **Como Rodar o Projeto (Mobile)**
 
