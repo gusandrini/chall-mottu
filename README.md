@@ -48,9 +48,11 @@ Entrega **agilidade**, **rastreamento preciso** e **organização eficiente**.
 
 ---
 
-##  **Link para download**
+##  **Links para download**
 
-🔗 **Download**: https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7
+🔗 **Download build**: https://appdistribution.firebase.dev/i/1da18626134ae639
+
+🔗 **Download build**: https://expo.dev/accounts/sandroka/projects/mottu/builds/d47f4387-357e-4312-8d2a-e4bd3c0f19a7
 
 
 ## ▶️ **Como Rodar o Projeto (Mobile)**
