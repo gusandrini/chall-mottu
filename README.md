@@ -44,7 +44,7 @@ Entrega **agilidade**, **rastreamento preciso** e **organização eficiente**.
 
 ## 📺 **Demonstração**
 
-🔗 **Vídeo**: https://www.youtube.com/watch?v=NHxCBjBFrJE
+🔗 **Vídeo**: [https://www.youtube.com/watch?v=NHxCBjBFrJE](https://youtu.be/gazzEQWqWMg)
 
 ---
 
